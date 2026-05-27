@@ -1,0 +1,8 @@
+{
+  "name": "FlowZen",
+  "description": "A learning tracker, logger, and productivity dashboard for students and self-learners.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
