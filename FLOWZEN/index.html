@@ -82,7 +82,7 @@ Before deploying to Vercel:
             color: var(--c-text);
             min-height: 100vh;
             overflow-x: hidden;
-            opacity: 0; /* Starts hidden for the fade-in animation */
+            
             transition: opacity 0.8s ease-in-out;
         }
         
@@ -2748,17 +2748,154 @@ Before deploying to Vercel:
         /* ===== END TODO DROPDOWNS FIX ===== */
 
     </style>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+
+
+
+        const SUPABASE_URL = 'https://nvqtwsnwvidjfogevbsp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52cXR3c253dmlkamZvZ2V2YnNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDk3NzIsImV4cCI6MjA5NDk4NTc3Mn0.UZ0gNZYrD3P31S1-VLNRgdvi4svELiZGZv1tZxCdUAk';
+
+        const { createClient } = supabase;
+        window._sb = createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+        console.log('FlowZen + Supabase ✓');
+    </script>
+<style>
+#loadingScreen {
+  pointer-events: none;
+}
+
+#loadingScreen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
+
 </head>
 <body>
 
+
+
+
+<div id="loadingScreen" style="
+  position: fixed;
+  inset: 0;
+  background: #09090f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.5s ease;">
+  
+  <div style="
+    font-family: 'Plus Jakarta Sans', 
+      sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(
+      135deg, #7c6bff, #ff6b9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 40px;
+    letter-spacing: -1px;">
+    FlowZen
+  </div>
+  
+  <div style="
+    width: 200px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;">
+    <div id="loadingBar" style="
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(
+        90deg, #7c6bff, #ff6b9d);
+      border-radius: 99px;
+      transition: width 0.1s linear;">
+    </div>
+  </div>
+</div>
     <!-- Ambient Background Elements -->
     <div class="bg-grid"></div>
+<script>
+// ===== LOADING SCREEN =====
+// Runs immediately, no conditions
+(function() {
+  const screen = document.getElementById(
+    'loadingScreen');
+  const bar = document.getElementById(
+    'loadingBar');
+  
+  // Safety check — if elements don't 
+  // exist, skip loading screen entirely
+  if (!screen) return;
+  
+  let progress = 0;
+  
+  // Animate progress bar
+  const progressTimer = setInterval(() => {
+    progress += 4;
+    if (bar) {
+      bar.style.width = 
+        Math.min(progress, 100) + '%';
+    }
+    if (progress >= 100) {
+      clearInterval(progressTimer);
+    }
+  }, 60); // 60ms x 25 steps = 1.5 seconds
+  
+  // Hide loading screen after 1.6 seconds
+  // No conditions, always runs
+  setTimeout(() => {
+    // Clear the progress timer 
+    // just in case
+    clearInterval(progressTimer);
+    if (bar) bar.style.width = '100%';
+    
+    // Fade out loading screen
+    if (screen) {
+      screen.style.opacity = '0';
+      screen.style.transition = 
+        'opacity 0.4s ease';
+      
+      // Remove from DOM after fade
+      setTimeout(() => {
+        if (screen && screen.parentNode) {
+          screen.style.display = 'none';
+          screen.parentNode.removeChild(
+            screen);
+        }
+      }, 400);
+    }
+    
+    console.log('Loading screen removed ✓');
+    
+  }, 1600); // 1.6 seconds total
+  
+})(); // Self-executing — runs immediately
+// ===== END LOADING SCREEN =====
+</script>
+
     <div class="bg-glow"></div>
 
     <!-- Global DOM Additions -->
-    <div id="loading-screen">
-        <div class="loading-logo"><span class="gradient-text">FlowZen</span></div>
-        <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
+    
     </div>
 
     <div id="toast-container"></div>
@@ -3619,58 +3756,134 @@ Before deploying to Vercel:
         // Master refresh — call this after 
         // ANY data change anywhere in the app
         function syncAll() {
-            console.log("🔄 Syncing all components...");
-            
-            // Refresh each component if it exists
-            try { refreshDashboard(); } 
-            catch(e) { console.log("dashboard:", e); }
-            
-            try { refreshSessionTable(); } 
-            catch(e) { console.log("sessions:", e); }
-            
-            try { if (typeof renderTodos === "function") renderTodos(); } 
-            catch(e) { console.log("todos:", e); }
-            
-            try { updateStats(); } 
-            catch(e) { console.log("stats:", e); }
-            
-            try { updateCharts(); } 
-            catch(e) { console.log("charts:", e); }
-            
-            try { refreshSkillPodium(); } 
-            catch(e) { console.log("podium:", e); }
-            
-            try { refreshHeatmap(); } 
-            catch(e) { console.log("heatmap:", e); }
-            
-            try { refreshTimeline(); } 
-            catch(e) { console.log("timeline:", e); }
-            
-            console.log("✅ Sync complete");
-        }
+  console.log('🔄 Syncing...');
+  
+  const fns = [
+    'refreshDashboard',
+    'buildHeatmap',
+    'buildPodium', 
+    'buildTimeline',
+    'updateStatCards',
+    'updateStats',
+    'updateCharts',
+    'initCharts',
+    'refreshSessionTable',
+    'renderSessionTable',
+    'refreshTodoList',
+    'renderTodos',
+    'refreshSkillPodium',
+    'refreshHeatmap',
+    'refreshTimeline',
+    'updateGreeting',
+    'updateDailyGoal'
+  ];
+  
+  fns.forEach(name => {
+    if (typeof window[name] === 
+        'function') {
+      try {
+        window[name]();
+      } catch(e) {
+        console.log(name + ' error:', e);
+      }
+    }
+  });
+  
+  console.log('✅ Sync complete');
+}
+
+function refreshHeatmap() {
+  if (typeof buildHeatmap === 'function') {
+    buildHeatmap();
+  }
+}
+
+function refreshSkillPodium() {
+  if (typeof buildPodium === 'function') {
+    buildPodium();
+  }
+}
+
+function refreshTimeline() {
+  if (typeof buildTimeline === 'function') {
+    buildTimeline();
+  }
+}
+
+function refreshDashboard() {
+  if (typeof buildHeatmap === 'function')
+    buildHeatmap();
+  if (typeof buildPodium === 'function')
+    buildPodium();
+  if (typeof buildTimeline === 'function')
+    buildTimeline();
+  if (typeof updateStatCards === 'function')
+    updateStatCards();
+  if (typeof updateGreeting === 'function')
+    updateGreeting();
+}
+
+function updateStats() {
+  if (typeof refreshDashboard === 'function')
+    refreshDashboard();
+}
+
+function updateCharts() {
+  if (typeof initCharts === 'function') {
+    initCharts();
+  }
+}
+
+function refreshTodoList() {
+  if (typeof renderTodos === 'function') {
+    renderTodos();
+  }
+}
 
         // Helper: get current user's sessions
-        function getSessions() {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            return JSON.parse(localStorage.getItem("lf_sessions_" + username) || "[]");
-        }
+        async function getSessions() {
+  try {
+    const { data: { user } } = await _sb.auth.getUser();
+    if (user) {
+      const { data, error } = await _sb.from('sessions').select('*').eq('user_id', user.id).order('date_raw', { ascending: false });
+      if (!error && data) {
+        return data.map(s => ({
+          id: s.id, skill: s.skill, hours: parseFloat(s.hours), durationMinutes: s.duration_minutes, category: s.category || 'other', mood: s.mood || '', notes: s.notes || '', date: s.date, dateRaw: s.date_raw, weekday: s.weekday
+        }));
+      }
+    }
+  } catch(e) { console.log('Using localStorage:', e); }
+  const uname = localStorage.getItem('fz_current_user') || 'guest';
+  return JSON.parse(localStorage.getItem('fz_sessions_' + uname) || '[]');
+}
 
         // Helper: get current user's todos
-        function getTodos() {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            return JSON.parse(localStorage.getItem("lf_todos_" + username) || "[]");
-        }
+        async function getTodos() {
+  try {
+    const { data: { user } } = await _sb.auth.getUser();
+    if (user) {
+      const { data, error } = await _sb.from('todos').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      if (!error && data) {
+        return data.map(t => ({
+          id: t.id, text: t.text, tag: t.tag, priority: t.priority, due: t.due, done: t.done, createdAt: t.created_at, completedAt: t.completed_at
+        }));
+      }
+    }
+  } catch(e) { console.log('Using localStorage:', e); }
+  const uname = localStorage.getItem('fz_current_user') || 'guest';
+  return JSON.parse(localStorage.getItem('fz_todos_' + uname) || '[]');
+}
 
         // Helper: save sessions
         function saveSessions(sessions) {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            localStorage.setItem("lf_sessions_" + username, JSON.stringify(sessions));
+            const username = localStorage.getItem("fz_current_user") || "guest";
+            localStorage.setItem("fz_sessions_" + username, JSON.stringify(sessions));
         }
 
         // Helper: save todos
         function saveTodos(todos) {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            localStorage.setItem("lf_todos_" + username, JSON.stringify(todos));
+            const username = localStorage.getItem("fz_current_user") || "guest";
+            localStorage.setItem("fz_todos_" + username, JSON.stringify(todos));
         }
 
         // ADD TO <script> - new variables
@@ -3753,7 +3966,7 @@ Before deploying to Vercel:
         function showSessionSuccess(skill, hours) {
             document.getElementById("log-success-msg").textContent = `+${hours}h added to ${skill}`;
             document.getElementById("log-success-card").classList.remove("hidden");
-            refreshDashboard();
+            if(typeof refreshDashboard === 'function') refreshDashboard();
         }
 
         function logSession() {
@@ -3787,7 +4000,7 @@ Before deploying to Vercel:
                 return;
             }
             
-            const username = localStorage.getItem("lf_current_user") || "guest";
+            const username = localStorage.getItem("fz_current_user") || "guest";
             
             const session = {
                 id: Date.now(),
@@ -3810,7 +4023,7 @@ Before deploying to Vercel:
             }
 
             // Save to localStorage
-            const key = "lf_sessions_" + username;
+            const key = "fz_sessions_" + username;
             const existing = JSON.parse(localStorage.getItem(key) || "[]");
             existing.unshift(session);
             localStorage.setItem(key, JSON.stringify(existing));
@@ -3959,7 +4172,7 @@ Before deploying to Vercel:
         };
 
         // Storage Keys
-        const STORAGE_KEY_USERS = 'lf_users';
+        const STORAGE_KEY_USERS = 'fz_users';
         const STORAGE_KEY_SESSION = 'flowzen_session';
 
         /**
@@ -3971,10 +4184,10 @@ Before deploying to Vercel:
                 body.classList.add('loaded');
             });
 
-            const user = localStorage.getItem("lf_current_user");
+            const user = localStorage.getItem("fz_current_user");
 
             if (user && user.trim() !== "") {
-                const isAdmin = localStorage.getItem("lf_is_admin") === "true";
+                const isAdmin = localStorage.getItem("fz_is_admin") === "true";
                 // If user is logged in, show the app immediately, autofilling data implicitly
                 showAppScreen({ name: user, isAdmin: isAdmin });
             } else {
@@ -4060,8 +4273,8 @@ Before deploying to Vercel:
         logoutBtn.addEventListener('click', handleLogout);
 
         function handleLogout() {
-            localStorage.removeItem("lf_current_user");
-            localStorage.removeItem("lf_is_admin");
+            localStorage.removeItem("fz_current_user");
+            localStorage.removeItem("fz_is_admin");
             window.location.replace("landing.html");
         }
 
@@ -4111,7 +4324,7 @@ Before deploying to Vercel:
 
             currentUserData = user;
             if(window.loadPreferences) loadPreferences();
-            refreshDashboard();
+            if(typeof refreshDashboard === 'function') refreshDashboard();
             if(window.showOnboarding) showOnboarding();
         }
 
@@ -4185,33 +4398,33 @@ Before deploying to Vercel:
         }
 
         // Session delete function:
-        window.deleteSession = function(id) {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            const key = "lf_sessions_" + username;
-            let sessions = JSON.parse(localStorage.getItem(key) || "[]");
-            
-            // Find and remove
-            sessions = sessions.filter(s => s.id !== id);
-            localStorage.setItem(key, JSON.stringify(sessions));
-            
-            showToast("Session deleted", "info");
-            
-            // Immediately refresh table
-            if (typeof refreshSessionTable === "function") {
-                refreshSessionTable();
-            }
-            
-            // Also update dashboard stats
-            if (typeof refreshDashboard === "function") {
-                refreshDashboard();
-            }
-            
-            syncAll();
-        };
+        window.deleteSession = async function(id) {
+  try {
+    const { data: { user } } = await _sb.auth.getUser();
+
+    if (user) {
+      await _sb.from('sessions')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user.id);
+    } else {
+      throw new Error('No user');
+    }
+  } catch(e) {
+    const uname = localStorage.getItem('fz_current_user') || 'guest';
+    const key = 'fz_sessions_' + uname;
+    let sessions = JSON.parse(localStorage.getItem(key) || '[]');
+    sessions = sessions.filter(s => s.id !== id);
+    localStorage.setItem(key, JSON.stringify(sessions));
+  }
+
+  if(typeof showToast !== 'undefined') showToast('Session deleted', 'info');
+  syncAll();
+};
 
         function refreshSessionTable() {
-            const username = localStorage.getItem("lf_current_user") || "guest";
-            const key = "lf_sessions_" + username;
+            const username = localStorage.getItem("fz_current_user") || "guest";
+            const key = "fz_sessions_" + username;
             const sessions = JSON.parse(localStorage.getItem(key) || "[]");
             
             const tableBody = document.getElementById("sessionTableBody") || document.getElementById("session-table-body") || document.getElementById("recent-sessions-list");
@@ -4350,1385 +4563,127 @@ Before deploying to Vercel:
             }
         }
 
-        function executeDeleteAll() {
-            const val = document.getElementById("deleteConfirmInput").value;
-            if (val !== "DELETE") {
-                showToast("Please type DELETE exactly", "error");
-                return;
-            }
-            
-            const username = localStorage.getItem("lf_current_user");
-            if (!username) {
-                window.location.replace("landing.html");
-                return;
-            }
-            
-            const keysToDelete = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && (
-                    key.includes("_" + username) ||
-                    key === "lf_current_user" ||
-                    key === "lf_is_admin" ||
-                    key === "lf_gemini_key" ||
-                    key.startsWith("lf_ai_uses_")
-                )) {
-                    keysToDelete.push(key);
-                }
-            }
-            
-            keysToDelete.forEach(key => {
-                localStorage.removeItem(key);
-                console.log("Deleted:", key);
-            });
-            
-            showToast("All data cleared. Redirecting...", "success");
-            setTimeout(() => {
-                window.location.replace("landing.html");
-            }, 1500);
-        }
+        async function executeDeleteAll() {
+  const val = document.getElementById('deleteConfirmInput')?.value;
+  if (val !== 'DELETE') return;
 
-        function updateGreeting() {
-            const username = localStorage.getItem("lf_current_user") || "Learner";
-            const greetUsername = document.getElementById("greetUsername");
-            if (greetUsername) greetUsername.textContent = username;
+  const isAdmin = localStorage.getItem('fz_is_admin') === 'true';
+  if (isAdmin) {
+    toast('Admin data is protected', 'warn'); // Use the generic toast or existing showToast
+    return;
+  }
 
-            const h = new Date().getHours();
-            let timeStr = "Good evening";
-            if (h < 12) timeStr = "Good morning";
-            else if (h < 17) timeStr = "Good afternoon";
-            
-            const greetTime = document.getElementById("greetTime");
-            if (greetTime) greetTime.textContent = timeStr;
+  try {
+    const { data: { user } } = await _sb.auth.getUser();
 
-            const dateEl = document.getElementById("dash-date-new");
-            if (dateEl) {
-                dateEl.textContent = new Date().toLocaleDateString('en-US', {
-                    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-                });
-            }
+    if (user) {
+      await _sb.from('sessions').delete().eq('user_id', user.id);
+      await _sb.from('todos').delete().eq('user_id', user.id);
+      await _sb.from('ai_logs').delete().eq('user_id', user.id);
+      await _sb.from('profiles').delete().eq('id', user.id);
+      await _sb.auth.signOut();
+    }
 
-            const badge = document.getElementById("heroBadge");
-            if (badge) {
-                badge.textContent = `✦ Day ${getDayCount()} of your journey`;
-            }
-        }
+    localStorage.clear();
+    if(typeof showToast !== "undefined") showToast('All data cleared ✓', 'success');
 
-        function getDayCount() {
-            const username = localStorage.getItem("lf_current_user");
-            const userData = JSON.parse(localStorage.getItem("lf_users") || "{}");
-            const user = userData[username];
-            if (!user || !user.createdAt) return 1;
-            const created = new Date(user.createdAt);
-            const now = new Date();
-            const diff = Math.floor((now - created) / (1000*60*60*24));
-            return Math.max(1, diff + 1);
-        }
+    setTimeout(() => {
+      window.location.replace('landing.html');
+    }, 1500);
 
-        function updateDailyGoal() {
-            const sessions = getSessions();
-            const today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'});
-            const todayHours = sessions.filter(s => {
-                if (s.dateRaw) {
-                    return new Date(s.dateRaw).toLocaleDateString('en-US', {month:'short', day:'numeric'}) === today;
-                }
-                return s.date === today;
-            }).reduce((sum, s) => sum + (s.hours||0), 0);
-            
-            const goalPct = Math.min(100, Math.round((todayHours / 2) * 100));
+  } catch(err) {
+    if(typeof showToast !== "undefined") showToast('Error: ' + err.message, 'error');
+  }
+}
 
-            const hrEl = document.getElementById("heroTodayHrs");
-            if (hrEl) hrEl.textContent = `${todayHours.toFixed(1)}h studied`;
-            
-            const streakEl = document.getElementById("heroStreak");
-            const uniqueDays = new Set(sessions.map(s => s.date)).size;
-            if (streakEl) streakEl.textContent = `${uniqueDays} days`;
-
-            const goalVal = document.getElementById("heroGoalVal");
-            if (goalVal) goalVal.textContent = `${goalPct}% of 2h`;
-
-            const goalPercent = document.getElementById("goalPercentNew");
-            if (goalPercent) goalPercent.textContent = `${goalPct}%`;
-
-            const ringFill = document.getElementById("goalRingNew");
-            if (ringFill) {
-                const offset = 100 - goalPct;
-                ringFill.style.strokeDashoffset = offset;
-                ringFill.style.stroke = goalPct >= 100 ? "#ffb347" : "#6bffca";
-            }
-        }
-
-        function animateCount(el, target, duration) {
-            let start = 0;
-            const step = Math.max(0.1, target / (duration / 16));
-            if (target === 0) {
-                el.textContent = "0";
-                return;
-            }
-            const timer = setInterval(() => {
-                start += step;
-                if (start >= target) {
-                    el.textContent = Number.isInteger(target) ? Math.round(target) : target.toFixed(1);
-                    clearInterval(timer);
-                } else {
-                    el.textContent = Number.isInteger(target) ? Math.floor(start) : start.toFixed(1);
-                }
-            }, 16);
-        }
-
-        function updateStatCards() {
-            const sessions = getSessions();
-            const todos = getTodos();
-            
-            const totalHours = sessions.reduce((sum, s) => sum + (s.hours || 0), 0);
-            const cardsHr = document.getElementById("statCardHours");
-            if (cardsHr) animateCount(cardsHr, totalHours, 1000);
-            
-            const hoursSub = document.getElementById("statCardHoursSub");
-            if (hoursSub) {
-                const oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                const recentHours = sessions.filter(s => new Date(s.dateRaw || s.date || new Date()) >= oneWeekAgo).reduce((sum, s) => sum + (s.hours || 0), 0);
-                hoursSub.textContent = `+${recentHours.toFixed(1)}h this week`;
-            }
-
-            const uniqueDays = new Set(sessions.map(s => s.date)).size;
-            const cardsDays = document.getElementById("statCardDays");
-            if (cardsDays) animateCount(cardsDays, uniqueDays, 1000);
-
-            const uniqueSkills = new Set(sessions.map(s => s.skill)).size;
-            const cardsSkills = document.getElementById("statCardSkills");
-            if (cardsSkills) animateCount(cardsSkills, uniqueSkills, 1000);
-
-            const doneTodos = todos.filter(t => t.done).length;
-            const cardsTasks = document.getElementById("statCardTasks");
-            if (cardsTasks) animateCount(cardsTasks, doneTodos, 1000);
-        }
-
-        function buildHeatmap() {
-            const sessions = getSessions();
-            const heatmapEl = document.getElementById("activityHeatmap");
-            if (!heatmapEl) return;
-            
-            const dateHours = {};
-            sessions.forEach(s => {
-                let d;
-                if (s.dateRaw) {
-                    d = new Date(s.dateRaw);
-                } else if (s.date) {
-                    d = new Date(s.date);
-                } else {
-                    return;
-                }
-                const key = d.toDateString();
-                dateHours[key] = (dateHours[key] || 0) + (s.hours || 0);
-            });
-            
-            const today = new Date();
-            const startDate = new Date(today);
-            startDate.setDate(today.getDate() - 27);
-            
-            const dayOfWeek = startDate.getDay();
-            const daysToMon = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-            startDate.setDate(startDate.getDate() - daysToMon);
-            
-            heatmapEl.innerHTML = "";
-            
-            for (let i = 0; i < 28; i++) {
-                const cellDate = new Date(startDate);
-                cellDate.setDate(startDate.getDate() + i);
-                const key = cellDate.toDateString();
-                const hours = dateHours[key] || 0;
-                
-                let opacity = 0;
-                let glow = 0;
-                if (hours > 0 && hours <= 1) {
-                    opacity = 0.25; glow = 0;
-                } else if (hours > 1 && hours <= 2) {
-                    opacity = 0.5; glow = 4;
-                } else if (hours > 2 && hours <= 3) {
-                    opacity = 0.75; glow = 8;
-                } else if (hours > 3) {
-                    opacity = 1; glow = 12;
-                }
-                
-                const cell = document.createElement("div");
-                cell.className = "heat-cell";
-                
-                if (hours > 0) {
-                    cell.style.background = `rgba(124,107,255,${opacity})`;
-                    if (glow > 0) {
-                        cell.style.boxShadow = `0 0 ${glow}px rgba(124,107,255,${opacity})`;
-                    }
-                }
-                
-                const dateStr = cellDate.toLocaleDateString('en-US', {
-                    weekday: 'short', month: 'short', day: 'numeric'
-                });
-                cell.title = hours > 0 ? `${dateStr} · ${hours.toFixed(1)}h` : `${dateStr} · No sessions`;
-                
-                heatmapEl.appendChild(cell);
-            }
-        }
-
-        function buildTimeline() {
-            const sessions = getSessions();
-            const timelineEl = document.getElementById("activityTimeline");
-            if (!timelineEl) return;
-            
-            const catColors = {
-                coding: "#7c6bff", design: "#ff6b9d", math: "#6bffca", project: "#ffb347", other: "#6b6b85"
-            };
-            
-            const moodEmoji = {
-                tired:"😴", okay:"😐", good:"🙂", great:"😄", onfire:"🔥",
-                Tired:"😴", Okay:"😐", Good:"🙂", Great:"😄", "On Fire":"🔥"
-            };
-            
-            function timeAgo(dateRaw) {
-                if (!dateRaw) return "Recently";
-                const diff = Date.now() - new Date(dateRaw).getTime();
-                const h = Math.floor(diff / (1000*60*60));
-                const d = Math.floor(h / 24);
-                if (h < 1) return "Just now";
-                if (h < 24) return `${h}h ago`;
-                if (d === 1) return "Yesterday";
-                return `${d} days ago`;
-            }
-            
-            const recent = sessions.slice().sort((a,b) => new Date(b.dateRaw || b.date) - new Date(a.dateRaw || a.date)).slice(0, 6);
-            
-            if (recent.length === 0) {
-                timelineEl.innerHTML = `
-                    <div style="text-align:center; padding:32px;color:#6b6b85;">
-                        <div style="font-size:36px; margin-bottom:12px;">🌱</div>
-                        <div style="margin-bottom:16px;">Start logging to see your journey</div>
-                    </div>`;
-                return;
-            }
-            
-            timelineEl.innerHTML = recent.map((s, i) => {
-                const cKey = (s.category || "other").toLowerCase();
-                const color = catColors[cKey] || "#6b6b85";
-                const mEmoji = s.mood ? (moodEmoji[s.mood.toLowerCase().replace(" ", "")] || moodEmoji[s.mood]) : "";
-                
-                return `
-                    <div class="timeline-entry" style="animation-delay:${i*0.08}s">
-                        <div class="timeline-dot" style="background:${color}; box-shadow:0 0 8px ${color};"></div>
-                        <div class="timeline-card">
-                            <div class="timeline-top">
-                                <span class="timeline-skill">${s.skill}</span>
-                                <span class="timeline-hrs" style="color:${color}">+${s.hours}h</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="cat-pill" style="background:${color}22; color:${color}">${s.category || "other"}</span>
-                                ${mEmoji ? `<span>${mEmoji}</span>` : ""}
-                                <span class="time-ago">${timeAgo(s.dateRaw)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join("");
-        }
-
-        function buildPodium() {
-            const sessions = getSessions();
-            const podiumEl = document.getElementById("skillPodium");
-            const remainingEl = document.getElementById("skillRemaining");
-            if (!podiumEl) return;
-            
-            const skillHours = {};
-            sessions.forEach(s => {
-                skillHours[s.skill] = (skillHours[s.skill] || 0) + (s.hours || 0);
-            });
-            
-            const sorted = Object.entries(skillHours).sort((a,b) => b[1] - a[1]);
-            
-            if (sorted.length === 0) {
-                podiumEl.innerHTML = `
-                    <div style="text-align:center; padding:40px;color:#6b6b85;width:100%;">
-                        <div style="font-size:40px; margin-bottom:12px;">🎯</div>
-                        <div>Log sessions to build your podium!</div>
-                    </div>`;
-                if(remainingEl) remainingEl.innerHTML = "";
-                return;
-            }
-            
-            const medals = ["🥈","👑","🥉"];
-            const heights = ["100px","140px","70px"];
-            const colors = ["rgba(192,192,192","rgba(255,215,0","rgba(205,127,50"];
-            const order = [1,0,2]; 
-            
-            podiumEl.innerHTML = order.map(rank => {
-                const entry = sorted[rank];
-                if (!entry) return `
-                    <div class="podium-block" style="height:${heights[rank]}; opacity:0.3; background:rgba(255,255,255,0.03); border:1px dashed #2a2a3a;"></div>`;
-                
-                return `
-                    <div class="podium-block" style="
-                        height:${heights[rank]}; 
-                        background:linear-gradient(to top, ${colors[rank]},0.15), ${colors[rank]},0.03)); 
-                        border:1px solid ${colors[rank]},0.4); 
-                        box-shadow: ${rank===0 ? `0 0 20px ${colors[rank]},0.2)` : 'none'};">
-                        <span style="font-size:${rank===0?'28px':'22px'}">${medals[rank]}</span>
-                        <span class="podium-skill">${entry[0]}</span>
-                        <span class="podium-hrs" style="color:${colors[rank]},1);">${entry[1].toFixed(1)}h</span>
-                        ${rank===0 ? '<span class="podium-badge">Most Studied</span>' : ''}
-                    </div>
-                `;
-            }).join("");
-            
-            if (remainingEl) {
-                if (sorted.length > 3) {
-                    remainingEl.innerHTML = sorted.slice(3).map(([skill, hrs]) => `
-                        <span class="skill-pill-badge">${skill} · ${hrs.toFixed(1)}h</span>
-                    `).join("");
-                } else {
-                    remainingEl.innerHTML = "";
-                }
-            }
-        }
-
-        const quotes = [
-            { text: "The future belongs to those who learn more skills and combine them in creative ways.", author: "Robert Greene" },
-            { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
-            { text: "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice.", author: "Pelé" },
-            { text: "The beautiful thing about learning is that no one can take it away from you.", author: "B.B. King" },
-            { text: "Expertise requires no less than 10,000 hours of deliberate practice.", author: "Anders Ericsson" },
-            { text: "Anyone who stops learning is old, whether at twenty or eighty.", author: "Henry Ford" },
-            { text: "Skill is only developed by hours and hours of beating on your craft.", author: "Will Smith" },
-            { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" }
-        ];
-
-        let currentQuoteIdx = 0;
-        function cycleQuote() {
-            currentQuoteIdx = (currentQuoteIdx + 1) % quotes.length;
-            const q = quotes[currentQuoteIdx];
-            const textEl = document.getElementById("quoteText");
-            const authorEl = document.getElementById("quoteAuthor");
-            if(textEl) textEl.textContent = q.text;
-            if(authorEl) authorEl.textContent = "— " + q.author;
-        }
-
-        function refreshDashboard() {
-            updateGreeting();
-            updateDailyGoal();
-            updateStatCards();
-            buildHeatmap();
-            buildTimeline();
-            buildPodium();
-
-            // Init quote if empty
-            const textEl = document.getElementById("quoteText");
-            if (textEl && textEl.textContent === "Motivation quote goes here...") {
-                cycleQuote();
-            }
-
-            // --- SKILL PROGRESS (for Log Session) ---
-            const sessions = getSessions();
-            const skillTotals = {};
-            sessions.forEach(s => {
-                skillTotals[s.skill] = (skillTotals[s.skill] || 0) + s.hours;
-            });
-            
-            // Update skill suggestions in Log Session
-            const suggestions = document.getElementById("skillSuggestions");
-            if (suggestions) {
-                const topSkills = Object.keys(skillTotals)
-                    .sort((a,b) => skillTotals[b] - skillTotals[a])
-                    .slice(0, 6);
-                suggestions.innerHTML = topSkills
-                    .map(skill => `
-                        <button 
-                            class="skill-pill"
-                            onclick="document.getElementById('logSkill').value='${skill}'"
-                            type="button">
-                            ${skill}
-                        </button>
-                    `).join("");
-            }
-        }
-
-        function updateStats() {
-            refreshDashboard();
-        }
-
-        // ----------------------------------------------------
-        // SECTION 3: AI INSIGHTS & CHARTS LOGIC
-        // ----------------------------------------------------
         
-        let chartLineInst = null;
-        let chartDoughnutInst = null;
-        let chartBarInst = null;
-        let lastAiResponse = "";
 
-        // UI Elements
-        const apiKeyBar = document.getElementById('api-key-bar');
-        const geminiKeyInput = document.getElementById('gemini-key-input');
-        const saveKeyBtn = document.getElementById('save-key-btn');
-        const aiJournalInput = document.getElementById('ai-journal-input');
-        const journalWordCount = document.getElementById('journal-word-count');
-        const btnAnalyze = document.getElementById('btn-analyze');
-        const btnAnalyzeText = document.getElementById('btn-analyze-text');
-        const aiLimitsText = document.getElementById('ai-limits-text');
-        const aiResultCard = document.getElementById('ai-result-card');
-        const aiResponseTextDiv = document.getElementById('ai-response-text');
+
         
-        function initAIInsightsView() {
-            // Setup API Key UI
-            const storedKey = localStorage.getItem('lf_gemini_key');
-            if (currentUserData.isAdmin) {
-                apiKeyBar.innerHTML = `<span class="api-label" style="color: var(--c-text-muted);">// Admin uses server key — replace with your real key here</span>`;
-                geminiKeyInput.value = "admin_key_placeholder";
-            } else if (storedKey) {
-                apiKeyBar.className = "api-key-bar collapsed";
-                apiKeyBar.innerHTML = `<span class="api-label">✓ API Key saved — Admin key active</span>`;
-            }
 
-            // Limits Text
-            if (currentUserData.isAdmin) {
-                aiLimitsText.innerHTML = "⚡ Unlimited AI access";
-                const banner = document.getElementById('ai-upgrade-banner');
-                if(banner) banner.style.setProperty('display', 'none', 'important');
-            } else {
-                aiLimitsText.innerHTML = "Free users: 3 AI analyses per day | Admin: Unlimited";
-                const banner = document.getElementById('ai-upgrade-banner');
-                if(banner) banner.style.setProperty('display', 'flex', 'important');
-            }
-            
-            Chart.defaults.color = '#E8E8F0';
-            Chart.defaults.font.family = "'DM Mono', monospace";
-            Chart.defaults.scale.grid.color = 'rgba(255,255,255,0.05)';
-            
-            renderCharts();
+        document.addEventListener(
+  'DOMContentLoaded', async function() {
+  
+  // Safety timeout — if auth check 
+  // takes more than 5 seconds,
+  // something is wrong, just load the page
+  const safetyTimer = setTimeout(() => {
+    console.warn(
+      'Auth check timed out — loading anyway');
+    if (typeof initApp === 'function') {
+      initApp();
+    }
+  }, 5000);
+  
+  try {
+    // Check Supabase session
+    const { data: { session } } = 
+      await window._sb.auth.getSession();
+    
+    clearTimeout(safetyTimer);
+    
+    if (session) {
+      const { data: profile } = await window._sb
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (profile) {
+        localStorage.setItem(
+          'fz_current_user',
+          profile.username);
+        localStorage.setItem(
+          'fz_is_admin',
+          profile.is_admin ? 
+            'true' : 'false');
+      }
+      
+      if (typeof initApp === 'function') {
+        initApp();
+      }
+      
+    } else {
+      const localUser = localStorage.getItem(
+        'fz_current_user');
+      
+      if (!localUser) {
+        // Only redirect if this is index.html
+        // landing.html should never redirect
+        if (window.location.pathname
+            .includes('index') || window.location.pathname === '/') {
+          window.location.replace(
+            'landing.html');
         }
+        return;
+      }
+      
+      if (typeof initApp === 'function') {
+        initApp();
+      }
+    }
+    
+  } catch(err) {
+    clearTimeout(safetyTimer);
+    console.error('Auth error:', err);
+    
+    // Even if Supabase fails,
+    // still load the page
+    const localUser = localStorage.getItem(
+      'fz_current_user');
+    
+    if (!localUser && 
+        (window.location.pathname
+          .includes('index') || window.location.pathname === '/')) {
+      window.location.replace('landing.html');
+    } else {
+      if (typeof initApp === 'function') {
+        initApp();
+      }
+    }
+  }
+});
 
-        if (saveKeyBtn) {
-            saveKeyBtn.addEventListener('click', () => {
-                const key = geminiKeyInput.value.trim();
-                if (key) {
-                    localStorage.setItem('lf_gemini_key', key);
-                    apiKeyBar.className = "api-key-bar collapsed";
-                    apiKeyBar.innerHTML = `<span class="api-label">✓ API Key saved — Admin key active</span>`;
-                    showToast("API Key Saved! 🔑");
-                }
-            });
-        }
-
-        if (aiJournalInput) {
-            aiJournalInput.addEventListener('input', () => {
-                const text = aiJournalInput.value.trim();
-                const words = text === "" ? 0 : text.split(/\\s+/).length;
-                journalWordCount.textContent = `${words} word${words !== 1 ? 's' : ''}`;
-            });
-        }
-
-        function getTodayString() {
-            const d = new Date();
-            return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-        }
-
-        if (btnAnalyze) {
-            btnAnalyze.addEventListener('click', async () => {
-                const text = aiJournalInput.value.trim();
-                if (!text) return showToast("Please write something first!");
-
-                let apiKey = currentUserData.isAdmin ? "admin" : localStorage.getItem('lf_gemini_key');
-                if (!apiKey) return showToast("Please save your Gemini API Key first!");
-
-                const today = getTodayString();
-                const usageKey = `lf_ai_uses_${currentUserData.name}_${today}`;
-                let usesToday = parseInt(localStorage.getItem(usageKey) || "0");
-
-                if (!currentUserData.isAdmin && usesToday >= 3) {
-                    return showToast("Daily limit reached! (3/3)");
-                }
-
-                // UI Loading state
-                btnAnalyze.disabled = true;
-                btnAnalyzeText.innerHTML = "⏳ Gemini is thinking...";
-                aiResultCard.style.display = 'none';
-
-                try {
-                    let aiText = "";
-                    
-                    if (currentUserData.isAdmin && apiKey === "admin") {
-                        await new Promise(r => setTimeout(r, 1500));
-                        aiText = `🎯 **Summary**\\nWow, what a productive day! You tackled a great mix of frontend and algorithms.\\n\\n📚 **Topics Detected**\\n⚛️ React Hooks\\n💻 LeetCode\\n🎨 CSS Animations\\n\\n⏱ **Time Breakdown**\\n• React Hooks: 2.0h\\n• LeetCode: 1.0h\\n• CSS: 0.5h\\n\\n💡 **Next Step**\\nTry using a custom hook for your next React component!\\n\\n🔥 **Motivation**\\nKeep up the amazing momentum, you're crushing it!`;
-                    } else {
-                        const prompt = `System context: You are an enthusiastic learning coach inside FlowZen, a student productivity app. The user will describe what they studied today. Respond with:\\n1. 🎯 Summary — 2 sentence encouraging recap\\n2. 📚 Topics Detected — list each topic with an emoji\\n3. ⏱ Time Breakdown — estimated hours per topic if mentioned\\n4. 💡 Next Step — one specific actionable suggestion\\n5. 🔥 Motivation — one short energetic closing line\\nKeep it concise, fun, and energetic. Use emojis. Max 200 words.\\n\\nUser text: ${text}`;
-
-                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                        });
-                        
-                        if (!res.ok) throw new Error("API Error");
-                        const data = await res.json();
-                        aiText = data.candidates[0].content.parts[0].text;
-                    }
-
-                    if (!currentUserData.isAdmin) localStorage.setItem(usageKey, (usesToday + 1).toString());
-                    
-                    lastAiResponse = aiText;
-                    aiResponseTextDiv.textContent = aiText;
-                    aiResultCard.style.display = 'block';
-                    
-                    // Silent auto-log attempt (very basic)
-                    const sessions = getSessions();
-                    sessions.unshift({
-                        id: Date.now().toString(),
-                        skill: "AI Insight Session",
-                        hours: 1,
-                        category: "Other",
-                        notes: text.substring(0, 50) + "...",
-                        date: new Date().toISOString()
-                    });
-                    saveSessions(sessions);
-                    refreshDashboard();
-                    
-                    if(document.getElementById('ai-insights-view').style.display === 'block'){
-                        renderCharts(); 
-                    }
-                    
-                } catch (err) {
-                    aiResponseTextDiv.textContent = "⚠️ Couldn't reach Gemini. Check your API key or try again in a moment.";
-                    aiResultCard.style.display = 'block';
-                } finally {
-                    btnAnalyze.disabled = false;
-                    btnAnalyzeText.innerHTML = "✨ Analyze with Gemini";
-                }
-            });
-        }
-
-        document.getElementById('btn-copy-ai').addEventListener('click', () => {
-            navigator.clipboard.writeText(lastAiResponse);
-            showToast("Copied to clipboard!");
-        });
-
-        document.getElementById('btn-save-insight').addEventListener('click', () => {
-            if (!lastAiResponse) return;
-            const sessions = getSessions();
-            sessions.unshift({
-                id: Date.now().toString(),
-                skill: "Gemini AI Journal",
-                hours: 0,
-                category: "Other",
-                notes: "Saved Journal Insight",
-                date: new Date().toISOString()
-            });
-            saveSessions(sessions);
-            syncAll();
-            showToast("Saved to log!");
-        });
-
-        // ----------------------------------------------------
-        // CHARTS LOGIC
-        // ----------------------------------------------------
-        function renderCharts() {
-            const sessions = getSessions();
-            
-            // Generate last 14 days dates array
-            const dates = [];
-            const hoursByDate = {};
-            for(let i=13; i>=0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-                dates.push(dStr);
-                hoursByDate[dStr] = 0;
-            }
-
-            // Fill data
-            const skillsMap = {};
-            const weekDays = [0, 0, 0, 0, 0, 0, 0]; // Mon..Sun
-            sessions.forEach(s => {
-                const d = new Date(s.date);
-                const dStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-                if (hoursByDate[dStr] !== undefined) {
-                    hoursByDate[dStr] += s.hours;
-                }
-                
-                skillsMap[s.skill] = (skillsMap[s.skill] || 0) + s.hours;
-                
-                let day = d.getDay() - 1;
-                if (day < 0) day = 6;
-                weekDays[day] += s.hours;
-            });
-
-            const lineData = dates.map(d => hoursByDate[d]);
-
-            // Chart 1: Line
-            const ctxLine = document.getElementById('chart-line');
-            if(chartLineInst) chartLineInst.destroy();
-            chartLineInst = new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: 'Hours Studied',
-                        data: lineData,
-                        borderColor: '#7C6BFF',
-                        backgroundColor: 'rgba(124, 107, 255, 0.15)',
-                        borderWidth: 3,
-                        pointBackgroundColor: '#7C6BFF',
-                        pointBorderColor: '#fff',
-                        pointRadius: 4,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, suggestedMax: 5 }
-                    }
-                }
-            });
-
-            // FREE VS PRO Lock
-            const lock1 = document.getElementById('chart-lock-1');
-            const lock2 = document.getElementById('chart-lock-2');
-            if (!currentUserData || !currentUserData.isAdmin) {
-                lock1.classList.remove('hidden');
-                lock2.classList.remove('hidden');
-            } else {
-                lock1.classList.add('hidden');
-                lock2.classList.add('hidden');
-            }
-
-            // Chart 2: Doughnut
-            const doughnutColors = ['#7C6BFF', '#FF6B9D', '#6BFFCA', '#FFB347'];
-            const skillLabels = Object.keys(skillsMap);
-            const skillData = Object.values(skillsMap);
-            
-            const ctxDoughnut = document.getElementById('chart-doughnut');
-            if(chartDoughnutInst) chartDoughnutInst.destroy();
-            
-            // Custom plugin for center text
-            const centerTextPlugin = {
-                id: 'centerText',
-                beforeDraw: function(chart) {
-                    if (chart.config.type !== 'doughnut') return;
-                    let width = chart.width, height = chart.height, ctx = chart.ctx;
-                    ctx.restore();
-                    let total = skillData.reduce((a,b)=>a+b, 0);
-                    ctx.font = "bold 1.5rem 'Plus Jakarta Sans'";
-                    ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#FFFFFF";
-                    let text = total > 0 ? total.toFixed(1) + "h" : "0h";
-                    let textX = Math.round((width - ctx.measureText(text).width) / 2);
-                    let textY = height / 2;
-                    ctx.fillText(text, textX, textY);
-                    
-                    ctx.font = "0.8rem 'DM Mono'";
-                    ctx.fillStyle = "#8E8B99";
-                    let labelText = "Total Hours";
-                    let labelX = Math.round((width - ctx.measureText(labelText).width) / 2);
-                    ctx.fillText(labelText, labelX, textY + 25);
-                    ctx.save();
-                }
-            };
-            
-            chartDoughnutInst = new Chart(ctxDoughnut, {
-                type: 'doughnut',
-                data: {
-                    labels: skillLabels.length === 0 ? ['No data'] : skillLabels,
-                    datasets: [{
-                        data: skillData.length === 0 ? [1] : skillData,
-                        backgroundColor: skillData.length === 0 ? ['#2A2833'] : doughnutColors,
-                        borderWidth: 0,
-                        cutout: '75%'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
-                    }
-                },
-                plugins: [centerTextPlugin]
-            });
-
-            // Chart 3: Bar
-            const barColors = weekDays.map((_, i) => i >= 5 ? '#FF6B9D' : '#7C6BFF'); // Weekend pink, weekday purple
-            const ctxBar = document.getElementById('chart-bar');
-            if(chartBarInst) chartBarInst.destroy();
-            chartBarInst = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Hours',
-                        data: weekDays,
-                        backgroundColor: barColors,
-                        borderRadius: 8,
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, suggestedMax: 5 }
-                    }
-                }
-            });
-        }
-
-        // ----------------------------------------------------
-        // SECTION 4: TO-DO LOGIC
-        // ----------------------------------------------------
-        
-        let currentFilter = { type: 'status', val: 'all' };
-        let currentSort = 'newest';
-        let selectedTasks = new Set();
-        let editTaskId = null; // ID of the task being edited
-        
-        const MAX_FREE_TASKS = 15;
-
-        // UI elements
-        const todoForm = document.getElementById('todo-form');
-        const todoInputText = document.getElementById('todo-input-text');
-        const todoInputTag = document.getElementById('todo-input-tag');
-        const todoInputPriority = document.getElementById('todo-input-priority');
-        const todoInputDue = document.getElementById('todo-input-due');
-        const todoSubmitBtn = document.getElementById('todo-submit-btn');
-        const todoLimitMessage = document.getElementById('todo-limit-message');
-        
-        const todoActiveList = document.getElementById('todo-active-list');
-        const todoCompletedList = document.getElementById('todo-completed-list');
-        
-        const btnClearCompleted = document.getElementById('btn-clear-completed');
-        const completedToggle = document.getElementById('completed-toggle');
-        const completedChevron = document.getElementById('completed-chevron');
-        
-        const bulkActionBar = document.getElementById('bulk-action-bar');
-        const bulkSelectedCount = document.getElementById('bulk-selected-count');
-
-        function initTodosView() {
-            renderTodos();
-            if (currentUserData.isAdmin) {
-                document.getElementById('admin-todo-panel').classList.remove('hidden');
-                renderAdminTodos();
-            }
-        }
-
-        todoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = todoInputText.value.trim();
-            if (!text) return;
-            
-            const todos = getTodos();
-            const activeTodos = todos.filter(t => !t.done);
-            
-            if (!currentUserData.isAdmin && activeTodos.length >= MAX_FREE_TASKS) {
-                todoLimitMessage.classList.remove('hidden');
-                // briefly shake input
-                todoInputText.style.animation = 'none';
-                void todoInputText.offsetWidth; // trigger reflow
-                todoInputText.style.animation = 'shake 0.4s';
-                return;
-            }
-            
-            todoLimitMessage.classList.add('hidden');
-            
-            const newTask = {
-                id: Date.now().toString(),
-                text: text,
-                tag: todoInputTag.value,
-                priority: todoInputPriority.value,
-                due: todoInputDue.value,
-                done: false,
-                createdAt: new Date().toISOString(),
-                completedAt: null
-            };
-            
-            todos.unshift(newTask);
-            saveTodos(todos);
-            
-            todoForm.reset();
-            todoInputPriority.value = 'med';
-            todoInputDue.value = 'week';
-            
-            showToast("Task added! 📌");
-            renderTodos();
-            syncAll();
-        });
-
-        // Filter and Sort Listeners
-        const filterBtns = document.querySelectorAll('.btn-filter');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                currentFilter.type = btn.getAttribute('data-type');
-                currentFilter.val = btn.getAttribute('data-filter');
-                
-                renderTodos();
-            });
-        });
-
-        document.getElementById('todo-sort-select').addEventListener('change', (e) => {
-            currentSort = e.target.value;
-            renderTodos();
-        });
-
-        // Completed Toggle
-        completedToggle.addEventListener('click', (e) => {
-            if(e.target === btnClearCompleted) return;
-            const isClosed = todoCompletedList.style.display !== 'flex';
-            todoCompletedList.style.display = isClosed ? 'flex' : 'none';
-            completedChevron.classList.toggle('open', isClosed);
-        });
-
-        // Clear Completed
-        btnClearCompleted.addEventListener('click', () => {
-            if(confirm("Clear completed tasks? This cannot be undone.")) {
-                const todos = getTodos().filter(t => !t.done);
-                saveTodos(todos);
-                renderTodos();
-                syncAll();
-            }
-        });
-
-        // Actions
-        window.toggleTodoDone = function(id) {
-            const todos = getTodos();
-            const task = todos.find(t => t.id === id);
-            if(task) {
-                task.done = !task.done;
-                task.completedAt = task.done ? new Date().toISOString() : null;
-                // If it becomes active and limit reached, maybe prevent? Or just let it bypass since it already existed.
-                saveTodos(todos);
-                renderTodos();
-                syncAll();
-                if(task.done) showToast("Task completed! 🎉");
-            }
-        };
-
-        window.deleteTodo = function(id) {
-            // Find card
-            const el = document.getElementById(`todo-card-${id}`);
-            if (el && confirm("Delete this task?")) {
-                el.classList.add('task-slide-out');
-                setTimeout(() => {
-                    let todos = getTodos();
-                    todos = todos.filter(t => t.id !== id);
-                    saveTodos(todos);
-                    if (selectedTasks.has(id)) {
-                        selectedTasks.delete(id);
-                        updateBulkBar();
-                    }
-                    renderTodos();
-                    syncAll();
-                }, 300);
-            }
-        };
-
-        window.editTodoStr = function(id) {
-            editTaskId = id;
-            renderTodos();
-            setTimeout(() => {
-                const inp = document.getElementById(`inline-edit-${id}`);
-                if(inp) {
-                    inp.focus();
-                    inp.setSelectionRange(inp.value.length, inp.value.length);
-                }
-            }, 50);
-        };
-
-        window.saveTodoEdit = function(id) {
-            const inp = document.getElementById(`inline-edit-${id}`);
-            if(!inp) return;
-            const newText = inp.value.trim();
-            if(newText) {
-                let todos = getTodos();
-                const task = todos.find(t => t.id === id);
-                if(task) task.text = newText;
-                saveTodos(todos);
-            }
-            editTaskId = null;
-            renderTodos();
-        };
-
-        // Keyboard support for edit
-        document.addEventListener('keydown', (e) => {
-            if(editTaskId && e.key === 'Enter') {
-                saveTodoEdit(editTaskId);
-            } else if (editTaskId && e.key === 'Escape') {
-                editTaskId = null;
-                renderTodos();
-            }
-        });
-
-        window.toggleTodoSelect = function(id, isChecked) {
-            if(isChecked) selectedTasks.add(id);
-            else selectedTasks.delete(id);
-            updateBulkBar();
-        };
-
-        function updateBulkBar() {
-            if (selectedTasks.size > 1) {
-                bulkSelectedCount.textContent = selectedTasks.size;
-                bulkActionBar.classList.add('visible');
-            } else {
-                bulkActionBar.classList.remove('visible');
-            }
-        }
-
-        document.getElementById('btn-bulk-cancel').addEventListener('click', () => {
-            selectedTasks.clear();
-            updateBulkBar();
-            renderTodos(); // uncheck boxes
-        });
-
-        document.getElementById('btn-bulk-done').addEventListener('click', () => {
-            const todos = getTodos();
-            let changed = false;
-            todos.forEach(t => {
-                if(selectedTasks.has(t.id) && !t.done) {
-                    t.done = true;
-                    t.completedAt = new Date().toISOString();
-                    changed = true;
-                }
-            });
-            if(changed) {
-                saveTodos(todos);
-                showToast(`Marked ${selectedTasks.size} tasks done!`);
-                selectedTasks.clear();
-                updateBulkBar();
-                renderTodos();
-                syncAll();
-            }
-        });
-
-        document.getElementById('btn-bulk-delete').addEventListener('click', () => {
-            if(confirm(`Delete ${selectedTasks.size} tasks?`)) {
-                let todos = getTodos();
-                todos = todos.filter(t => !selectedTasks.has(t.id));
-                saveTodos(todos);
-                selectedTasks.clear();
-                updateBulkBar();
-                renderTodos();
-                syncAll();
-            }
-        });
-
-        const tagLabels = {
-            'learn': { label: '📘 Learn', class: 'badge-tag-learn' },
-            'project': { label: '🚀 Project', class: 'badge-tag-project' },
-            'goal': { label: '🎯 Goal', class: 'badge-tag-goal' },
-            'other': { label: '📌 Other', class: 'badge-tag-other' }
-        };
-
-        const dueLabels = {
-            'today': 'Today',
-            'week': 'This Week',
-            'month': 'This Month',
-            'someday': 'Someday'
-        };
-
-        function renderTodos() {
-            let todos = getTodos();
-            
-            // Stats
-            const total = todos.length;
-            const active = todos.filter(t => !t.done).length;
-            const completed = total - active;
-            
-            document.getElementById('todo-count-total').textContent = total;
-            document.getElementById('todo-count-active').textContent = active;
-            document.getElementById('todo-count-completed').textContent = completed;
-            document.getElementById('completed-count-text').textContent = completed;
-            
-            if (completed > 0) btnClearCompleted.classList.remove('hidden');
-            else btnClearCompleted.classList.add('hidden');
-
-            // Limit UI
-            if (!currentUserData.isAdmin) {
-                if (active >= MAX_FREE_TASKS) {
-                    todoLimitMessage.classList.remove('hidden');
-                    todoSubmitBtn.disabled = true;
-                    todoSubmitBtn.style.opacity = '0.5';
-                    todoSubmitBtn.style.cursor = 'not-allowed';
-                } else {
-                    todoLimitMessage.classList.add('hidden');
-                    todoSubmitBtn.disabled = false;
-                    todoSubmitBtn.style.opacity = '1';
-                    todoSubmitBtn.style.cursor = 'pointer';
-                }
-            }
-
-            // Filtering
-            let filtered = todos.filter(t => {
-                if(currentFilter.type === 'status') {
-                    if(currentFilter.val === 'active') return !t.done;
-                    if(currentFilter.val === 'completed') return t.done;
-                    return true;
-                } else if(currentFilter.type === 'tag') {
-                    return t.tag === currentFilter.val;
-                } else if(currentFilter.type === 'priority') {
-                    return t.priority === currentFilter.val;
-                }
-                return true;
-            });
-
-            // Sorting
-            filtered.sort((a,b) => {
-                if(currentSort === 'newest') return parseInt(b.id) - parseInt(a.id);
-                if(currentSort === 'oldest') return parseInt(a.id) - parseInt(b.id);
-                if(currentSort === 'priority') {
-                    const order = { high: 0, med: 1, low: 2 };
-                    return order[a.priority] - order[b.priority];
-                }
-                if(currentSort === 'due') {
-                    const order = { today: 0, week: 1, month: 2, someday: 3 };
-                    return order[a.due] - order[b.due];
-                }
-                return 0;
-            });
-
-            const activeFiltered = filtered.filter(t => !t.done);
-            const completedFiltered = filtered.filter(t => t.done);
-
-            // Render Active
-            if (activeFiltered.length === 0) {
-                let msg = '';
-                if(todos.length === 0) msg = `<div class="empty-state"><div class="empty-icon">🎯</div><p style="font-family:var(--f-heading);font-size:1.2rem;font-weight:700;">No tasks yet!</p><p>Add your first goal above</p></div>`;
-                else if (total === completed && currentFilter.type === 'status' && currentFilter.val === 'active') msg = `<div class="empty-state"><div class="empty-icon">🎉</div><p style="font-family:var(--f-heading);font-size:1.2rem;font-weight:700;">All done!</p><p>You're crushing it!</p></div>`;
-                else msg = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No tasks match this filter</p></div>`;
-                todoActiveList.innerHTML = msg;
-            } else {
-                todoActiveList.innerHTML = activeFiltered.map(t => createTaskCard(t)).join('');
-            }
-
-            // Render Completed
-            if (completedFiltered.length === 0) {
-                todoCompletedList.innerHTML = `<div style="text-align:center;color:var(--c-text-faint);padding:2rem;">No completed tasks.</div>`;
-            } else {
-                todoCompletedList.innerHTML = completedFiltered.map(t => createTaskCard(t)).join('');
-            }
-            
-            // Check checkboxes if they are in selectedTasks
-            selectedTasks.forEach(id => {
-                const cb = document.getElementById(`sel-${id}`);
-                if(cb) cb.checked = true;
-            });
-        }
-
-        function createTaskCard(t) {
-            const isEditing = editTaskId === t.id;
-            
-            const tagDef = tagLabels[t.tag] || tagLabels['other'];
-            let priDot = 'dot-low';
-            if(t.priority === 'high') priDot = 'dot-high';
-            else if(t.priority === 'med') priDot = 'dot-med';
-            
-            // Check overdue
-            let isOverdue = false;
-            if (t.due === 'today' && !t.done) {
-                // simple check: if creation day is not today, it's overdue
-                const createdDate = new Date(parseInt(t.id));
-                const todayDate = new Date();
-                if (createdDate.toDateString() !== todayDate.toDateString()) {
-                    isOverdue = true;
-                }
-            }
-            
-            const checkedAttr = t.done ? 'checked' : '';
-            const doneClass = t.done ? 'task-done' : '';
-            
-            let textHtml = `<div class="task-text-content">${t.text}</div>`;
-            if (isEditing) {
-                textHtml = `<input type="text" class="inline-edit-input" id="inline-edit-${t.id}" value="${t.text}">`;
-            }
-
-            return `
-                <div class="task-card ${doneClass} task-slide-in" id="todo-card-${t.id}">
-                    <input type="checkbox" class="task-select-checkbox" id="sel-${t.id}" onchange="toggleTodoSelect('${t.id}', this.checked)">
-                    <label class="task-checkbox-wrap">
-                        <input type="checkbox" class="task-checkbox" ${checkedAttr} onchange="toggleTodoDone('${t.id}')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    </label>
-                    <div class="task-middle">
-                        ${textHtml}
-                        <div class="task-badges">
-                            <span class="task-badge ${tagDef.class}">${tagDef.label}</span>
-                            <span class="task-badge" style="background: rgba(255,255,255,0.05); color: var(--c-text-muted);">
-                                <span class="priority-dot ${priDot}"></span> ${t.priority.toUpperCase()}
-                            </span>
-                            <span class="task-badge due-badge ${isOverdue ? 'due-overdue' : ''}">
-                                ⏳ ${dueLabels[t.due]}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="task-actions">
-                        ${isEditing ? 
-                            `<button class="btn-icon" onclick="saveTodoEdit('${t.id}')">✓</button>` 
-                            :
-                            `<button class="btn-icon edit" onclick="editTodoStr('${t.id}')">✏️</button>`
-                        }
-                        <button class="btn-icon delete" onclick="deleteTodo('${t.id}')">✕</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Admin rendering
-        function renderAdminTodos() {
-            const tableBody = document.querySelector('#admin-todo-table tbody');
-            let html = '';
-            for(let i=0; i<localStorage.length; i++) {
-                const k = localStorage.key(i);
-                if(k.startsWith('lf_todos_')) {
-                    const username = k.replace('lf_todos_', '');
-                    let todos = [];
-                    try { todos = JSON.parse(localStorage.getItem(k)) || []; } catch(e){}
-                    const total = todos.length;
-                    const completed = todos.filter(t=>t.done).length;
-                    const active = total - completed;
-                    html += `<tr>
-                        <td>${username}</td>
-                        <td>${total}</td>
-                        <td style="color:var(--c-primary);">${active}</td>
-                        <td style="color:var(--c-green);">${completed}</td>
-                    </tr>`;
-                }
-            }
-            if (!html) html = `<tr><td colspan="4" style="text-align:center; color:var(--c-text-faint);">No tasks found in system.</td></tr>`;
-            tableBody.innerHTML = html;
-        }
-
-        // --- 5. POLISH & FINAL SECTION LOGIC ---
-        
-        // 1. Loading Screen
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loading-screen');
-            if(!sessionStorage.getItem('lf_loaded')) {
-                setTimeout(() => {
-                    loader.style.opacity = '0';
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                        sessionStorage.setItem('lf_loaded', 'true');
-                    }, 400);
-                }, 1800);
-            } else {
-                loader.style.display = 'none';
-            }
-        });
-
-        // 2. Onboarding Modal
-        let onboardStep = 0;
-        window.showOnboarding = function() {
-            if(!currentUserData || currentUserData.isAdmin) return;
-            const onboardKey = `lf_onboarded_${currentUserData.name}`;
-            if(!localStorage.getItem(onboardKey)) {
-                document.getElementById('onboarding-modal').classList.add('active');
-            }
-        };
-        window.nextOnboardingStep = function(step) {
-            onboardStep = step;
-            document.getElementById('onboarding-track').style.transform = `translateX(-${step * 33.333}%)`;
-            document.querySelectorAll('.onboarding-dot').forEach((d, i) => {
-                d.classList.toggle('active', i === step);
-            });
-        };
-        window.finishOnboarding = function() {
-            document.getElementById('onboarding-modal').classList.remove('active');
-            if(currentUserData) {
-                localStorage.setItem(`lf_onboarded_${currentUserData.name}`, 'true');
-            }
-        };
-        window.closeModals = function() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        };
-
-        // 4. Keyboard Shortcuts
-        document.getElementById('btn-shortcuts-hint').addEventListener('click', () => {
-            document.getElementById('shortcuts-modal').classList.add('active');
-        });
-        document.getElementById('shortcuts-modal').addEventListener('click', (e) => {
-            if(e.target === document.getElementById('shortcuts-modal')) closeModals();
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            // Respect inputs
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    e.target.closest('form')?.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
-                }
-                if (e.key === 'Escape') {
-                    e.target.blur();
-                    closeModals();
-                }
-                return;
-            }
-            if (e.key === 'Escape') closeModals();
-            if (e.key.toLowerCase() === 'd') document.querySelector('[data-target="dashboard-content"]')?.click();
-            if (e.key.toLowerCase() === 'a') document.querySelector('[data-target="ai-insights-view"]')?.click();
-            if (e.key.toLowerCase() === 't') document.querySelector('[data-target="todos-view"]')?.click();
-            if (e.key.toLowerCase() === 'p') document.querySelector('[data-target="profile-view"]')?.click();
-            if (e.key.toLowerCase() === 'l') {
-                document.querySelector('[data-target="dashboard-content"]')?.click();
-                setTimeout(() => document.getElementById('log-skill')?.focus(), 50);
-                e.preventDefault();
-            }
-        });
-
-        // 5. Profile & Preferences logic
-        window.loadPreferences = function() {
-            const prefQuotes = document.getElementById('pref-quotes');
-            const prefAutoAi = document.getElementById('pref-autoai');
-            const prefShortcuts = document.getElementById('pref-shortcuts');
-            const shortcutsHintBtn = document.getElementById('btn-shortcuts-hint');
-
-            if(!currentUserData) return;
-            const pQuotes = localStorage.getItem(`lf_pref_quotes_${currentUserData.name}`);
-            const pAutoAi = localStorage.getItem(`lf_pref_autoai_${currentUserData.name}`);
-            const pShorts = localStorage.getItem(`lf_pref_shortcuts_${currentUserData.name}`);
-            
-            if(pQuotes !== null && prefQuotes) prefQuotes.checked = pQuotes === 'true';
-            if(pAutoAi !== null && prefAutoAi) prefAutoAi.checked = pAutoAi === 'true';
-            if(pShorts !== null && prefShortcuts) prefShortcuts.checked = pShorts === 'true';
-            
-            if(shortcutsHintBtn && prefShortcuts) {
-                shortcutsHintBtn.style.display = prefShortcuts.checked ? 'block' : 'none';
-            }
-        };
-
-        ['pref-quotes', 'pref-autoai', 'pref-shortcuts'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) {
-                el.addEventListener('change', () => {
-                    if(!currentUserData) return;
-                    const prefKey = el.id.replace('pref-', '');
-                    localStorage.setItem(`lf_pref_${prefKey}_${currentUserData.name}`, el.checked);
-                    loadPreferences();
-                    if(el.id === 'pref-quotes') refreshDashboard();
-                    showToast('Preference saved', 'info');
-                });
-            }
-        });
-
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
-                if (progress < 1) requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        window.initProfileView = function() {
-            const profStatSess = document.getElementById('prof-stat-sessions');
-            const profStatHours = document.getElementById('prof-stat-hours');
-            const profStatStreak = document.getElementById('prof-stat-streak');
-            const profStatTop = document.getElementById('prof-stat-topskill');
-            const btnInitDel = document.getElementById('btn-init-delete');
-            const delArea = document.getElementById('delete-confirm-area');
-            const delConfirmInput = document.getElementById('delete-confirm-input');
-            const btnFinalDel = document.getElementById('btn-final-delete');
-
-            if(!currentUserData) return;
-            const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-            const dbUser = users[currentUserData.name];
-            
-            document.getElementById('profile-avatar-large').textContent = currentUserData.name.charAt(0).toUpperCase();
-            document.getElementById('profile-display-name').value = currentUserData.name;
-            
-            let dateStr = '2025';
-            if(dbUser && dbUser.createdAt) {
-                dateStr = new Date(dbUser.createdAt).toLocaleDateString();
-            }
-            document.getElementById('profile-member-since').textContent = `Member since ${dateStr}`;
-            
-            document.getElementById('profile-badge-area').innerHTML = currentUserData.isAdmin 
-                ? `<span class="task-badge badge-tag-project" style="font-size:0.9rem;">⚡ Admin</span>`
-                : `<span class="task-badge badge-tag-learn" style="font-size:0.9rem;">🆓 Free</span>`;
-
-            // Calculate stats
-            const sessions = getSessions();
-            const totalHours = sessions.reduce((acc, s) => acc + parseFloat(s.hours || 0), 0);
-            
-            const skillsMap = {};
-            sessions.forEach(s => {
-                skillsMap[s.skill] = (skillsMap[s.skill]||0) + parseFloat(s.hours || 0);
-            });
-            const topSkill = Object.keys(skillsMap).sort((a,b)=>skillsMap[b]-skillsMap[a])[0];
-            
-            // Basic Streak calculation
-            const dates = [...new Set(sessions.map(s => s.date.split('T')[0]))].sort().reverse();
-            let streak = 0;
-            let current = new Date();
-            for(let dStr of dates) {
-                let d = new Date(dStr);
-                let diff = (current.setHours(0,0,0,0) - d.setHours(0,0,0,0))/(1000*60*60*24);
-                if(diff === 0 || diff === 1) { streak++; current = d; }
-                else break;
-            }
-
-            profStatTop.textContent = topSkill || '-';
-            
-            // Animate
-            if(profStatSess.getAttribute('data-val') != sessions.length) {
-                profStatSess.setAttribute('data-val', sessions.length);
-                animateValue(profStatSess, 0, sessions.length, 1000);
-            }
-            if(profStatHours.getAttribute('data-val') != Math.floor(totalHours)) {
-                profStatHours.setAttribute('data-val', Math.floor(totalHours));
-                animateValue(profStatHours, 0, Math.floor(totalHours), 1000);
-            }
-            if(profStatStreak.getAttribute('data-val') != streak) {
-                profStatStreak.setAttribute('data-val', streak);
-                animateValue(profStatStreak, 0, streak, 1000);
-            }
-
-            // Danger Zone logic
-            if (btnInitDel) {
-                btnInitDel.disabled = currentUserData.isAdmin;
-                if(currentUserData.isAdmin) btnInitDel.title = "Admin data is protected";
-                else btnInitDel.title = "";
-                
-                btnInitDel.onclick = () => {
-                    if(!currentUserData.isAdmin) {
-                        delArea.classList.remove('hidden');
-                        btnInitDel.style.display = 'none';
-                    }
-                };
-            }
-            if (delConfirmInput && btnFinalDel) {
-                delConfirmInput.oninput = (e) => {
-                    btnFinalDel.disabled = e.target.value !== 'DELETE';
-                };
-                btnFinalDel.onclick = () => {
-                    // Wipe user keys
-                    const keys = [];
-                    for(let i=0; i<localStorage.length; i++) {
-                        const k = localStorage.key(i);
-                        if(k && k.endsWith('_' + currentUserData.name)) keys.push(k);
-                    }
-                    keys.forEach(k => localStorage.removeItem(k));
-                    
-                    const allUsers = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-                    delete allUsers[currentUserData.name];
-                    localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(allUsers));
-                    
-                    showToast("Account deleted successfully.", "warn");
-                    setTimeout(() => {
-                        window.location.href = 'landing.html';
-                    }, 1000);
-                };
-            }
-        };
 
         // 6. Quotes
         const quotesList = [
@@ -5751,36 +4706,14 @@ Before deploying to Vercel:
                 return;
             }
             const q = quotesList[Math.floor(Math.random() * quotesList.length)].split(' — ');
-            qc.innerHTML = `
-                <div class="quote-card">
-                    <div class="quote-text">"${q[0]}"</div>
-                    <div class="quote-author">— ${q[1]}</div>
-                </div>
-            `;
-        };
-
-        // 7. Auto AI Logic Trigger
-        let aiTypeTimeout = null;
-        const aiInputNode = document.getElementById('ai-journal-input');
-        if(aiInputNode) {
-            aiInputNode.addEventListener('input', () => {
-                const prefAutoAi = document.getElementById('pref-autoai');
-                if(prefAutoAi && prefAutoAi.checked) {
-                    clearTimeout(aiTypeTimeout);
-                    aiTypeTimeout = setTimeout(() => {
-                        const btn = document.getElementById('btn-analyze');
-                        if(btn && !btn.disabled && aiInputNode.value.length > 20) {
-                            btn.click();
-                        }
-                    }, 30000); // 30s delay
-                }
-            });
+            
+            if(q.length === 2) {
+                qc.innerHTML = '<div class="quote-card"><div class="quote-text">"' + q[0] + '"</div><div class="quote-author">— ' + q[1] + '</div></div>';
+            } else {
+                qc.innerHTML = '<div class="quote-card"><div class="quote-text">"' + q[0] + '"</div></div>';
+            }
         }
 
-        // Run boot sequence
-        initApp();
-    </script>
-    <!-- Inject redesign logic override -->
-    <script type="module" src="/src/redesign.js"></script>
+        </script>
 </body>
 </html>

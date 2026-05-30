@@ -1,610 +1,1508 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join FlowZen ✦ Sign Up</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg: #0a0a0f;
-            --surface: #13131a;
-            --surface2: #1c1c28;
-            --border: #2a2a3a;
-            --accent: #7c6bff;
-            --accent2: #ff6b9d;
-            --accent3: #6bffca;
-            --warn: #ffb347;
-            --text: #e8e8f0;
-            --muted: #6b6b80;
-            --radius: 16px;
-            --f-heading: 'Plus Jakarta Sans', sans-serif;
-            --f-body: 'DM Sans', sans-serif;
-            --f-mono: 'DM Mono', monospace;
+      :root {
+        --bg: #0a0a0f;
+        --surface: #13131a;
+        --surface2: #1c1c28;
+        --border: #2a2a3a;
+        --accent: #7c6bff;
+        --accent2: #ff6b9d;
+        --accent3: #6bffca;
+        --warn: #ffb347;
+        --text: #e8e8f0;
+        --muted: #6b6b80;
+        --radius: 16px;
+        --f-heading: "Plus Jakarta Sans", sans-serif;
+        --f-body: "DM Sans", sans-serif;
+        --f-mono: "DM Mono", monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: var(--f-body);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
+      }
+
+      body.loaded {
+        opacity: 1;
+      }
+
+      /* --- BACKGROUND --- */
+      .bg-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+      .orb {
+        position: absolute;
+        width: 50vw;
+        height: 50vw;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.1;
+        animation: drift 20s infinite alternate ease-in-out;
+      }
+      .orb-1 {
+        background: var(--accent);
+        top: -10%;
+        left: -10%;
+      }
+      .orb-2 {
+        background: var(--accent2);
+        bottom: -10%;
+        right: -10%;
+        animation-delay: -5s;
+      }
+      @keyframes drift {
+        0% {
+          transform: translate(0, 0);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--f-body);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
+        100% {
+          transform: translate(5%, 5%);
         }
+      }
+      .grid-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(42, 42, 58, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(42, 42, 58, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: -1;
+      }
 
-        body.loaded {
-            opacity: 1;
+      /* --- NEW HEADER --- */
+      .signup-header {
+        width: 100%;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* ROW 1 — Logo */
+      .signup-logo-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .signup-logo {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.5px;
+      }
+
+      .signup-logo span {
+        color: var(--accent);
+      }
+
+      /* ROW 2 — Progress Steps */
+      .signup-steps-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 40px;
+        gap: 0;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .step-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--surface2);
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .step-label {
+        font-family: "DM Mono", monospace;
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
+        white-space: nowrap;
+      }
+
+      /* Active step */
+      .step-item.active .step-circle {
+        border-color: var(--accent);
+        background: rgba(124, 107, 255, 0.15);
+        color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(124, 107, 255, 0.15);
+      }
+
+      .step-item.active .step-label {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      /* Completed step */
+      .step-item.done .step-circle {
+        border-color: var(--accent3);
+        background: rgba(107, 255, 202, 0.15);
+        color: var(--accent3);
+      }
+
+      .step-item.done .step-label {
+        color: var(--accent3);
+      }
+
+      /* Connector line between steps */
+      .step-connector {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+        margin: 0 8px;
+        margin-bottom: 24px;
+        border-radius: 99px;
+        transition: background 0.3s ease;
+        min-width: 40px;
+        max-width: 80px;
+      }
+
+      .step-connector.active {
+        background: var(--accent3);
+      }
+
+      /* Mobile */
+      @media (max-width: 480px) {
+        .signup-steps-row {
+          padding: 20px 24px;
         }
-
-        /* --- BACKGROUND --- */
-        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .orb { position: absolute; width: 50vw; height: 50vw; border-radius: 50%; filter: blur(100px); opacity: 0.1; animation: drift 20s infinite alternate ease-in-out; }
-        .orb-1 { background: var(--accent); top: -10%; left: -10%; }
-        .orb-2 { background: var(--accent2); bottom: -10%; right: -10%; animation-delay: -5s; }
-        @keyframes drift { 0% { transform: translate(0,0); } 100% { transform: translate(5%, 5%); } }
-        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(42,42,58,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(42,42,58,0.1) 1px, transparent 1px); background-size: 50px 50px; z-index: -1; }
-
-        /* --- PROGRESS BAR --- */
-        .progress-nav {
-            position: absolute;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            z-index: 20;
+        .step-connector {
+          min-width: 24px;
         }
-
-        .prog-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 80px; }
-        .prog-circle { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; background: var(--surface); color: var(--muted); transition: 0.4s; }
-        .prog-label { font-family: var(--f-mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; text-align: center; }
-
-        .prog-item.active .prog-circle { border-color: var(--accent); border-width: 3px; color: var(--accent); }
-        .prog-item.active .prog-label { color: var(--text); font-weight: 600; }
-        .prog-item.complete .prog-circle { background: var(--accent3); border-color: var(--accent3); color: var(--bg); }
-        .prog-item.complete .prog-label { color: var(--accent3); }
-
-        .prog-line { width: 50px; height: 1px; background: var(--border); margin-top: -15px; }
-
-        /* --- CARDS --- */
-        .signup-card {
-            width: 100%;
-            max-width: 480px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 3rem;
-            border-radius: var(--radius);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-            z-index: 10;
-            position: relative;
+        .step-label {
+          font-size: 9px;
         }
+      }
 
-        .step-view { display: none; }
-        .step-view.active { display: block; animation: slideIn 0.5s ease; }
+      /* --- CARDS --- */
+      .signup-card {
+        width: 100%;
+        max-width: 480px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 3rem;
+        border-radius: var(--radius);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+        z-index: 10;
+        position: relative;
+      }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+      .step-view {
+        display: none;
+      }
+      .step-view.active {
+        display: block;
+        animation: slideIn 0.5s ease;
+      }
 
-        .header { text-align: center; margin-bottom: 2.5rem; }
-        .header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .header p { color: var(--muted); font-size: 0.95rem; }
-
-        .form-group { margin-bottom: 1.5rem; }
-        .form-input {
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: 0.3s;
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
         }
-        .form-input:focus { border-color: var(--accent); outline: none; }
-        .form-input.valid { border-color: var(--accent3); }
-        .form-input.invalid { border-color: var(--accent2); }
-
-        .error-hint { font-size: 0.75rem; color: var(--accent2); margin-top: 0.3rem; display: none; }
-
-        .btn-full {
-            width: 100%;
-            padding: 1rem;
-            background: var(--accent);
-            color: white;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-top: 1rem;
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
-        .btn-full:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124,107,255,0.3); }
-        .btn-full:disabled { opacity: 0.5; cursor: not-allowed; }
+      }
 
-        /* Step 1 Code Inputs */
-        .otp-container { display: flex; justify-content: center; gap: 0.75rem; margin: 1.5rem 0; }
-        .otp-input {
-            width: 45px; height: 55px; background: var(--bg); border: 1px solid var(--border);
-            border-radius: 8px; text-align: center; font-size: 1.5rem; font-family: var(--f-mono);
-            color: var(--accent3); font-weight: 700;
+      .header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+      .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+      .header p {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .form-input {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: 0.3s;
+      }
+      .form-input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+      .form-input.valid {
+        border-color: var(--accent3);
+      }
+      .form-input.invalid {
+        border-color: var(--accent2);
+      }
+
+      .error-hint {
+        font-size: 0.75rem;
+        color: var(--accent2);
+        margin-top: 0.3rem;
+        display: none;
+      }
+
+      .btn-full {
+        width: 100%;
+        padding: 1rem;
+        background: var(--accent);
+        color: white;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-top: 1rem;
+      }
+      .btn-full:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(124, 107, 255, 0.3);
+      }
+      .btn-full:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Step 1 Code Inputs */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
         }
-        .otp-input:focus { border-color: var(--accent3); outline: none; }
-
-        /* Step 2 Strength Meter */
-        .strength-meter { display: flex; gap: 4px; margin-top: 0.5rem; }
-        .str-segment { flex: 1; height: 4px; background: var(--border); border-radius: 2px; transition: 0.3s; }
-
-        .checklist { list-style: none; margin-top: 1rem; font-size: 0.8rem; }
-        .checklist li { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); margin-bottom: 0.3rem; }
-        .checklist li.check { color: var(--accent3); }
-
-        /* Step 3 Success */
-        .success-anim { width: 80px; height: 80px; margin: 0 auto 2rem; display: block; }
-        .summary-card { background: var(--bg); border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
-        .sum-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; font-size: 0.95rem; }
-        .sum-item:last-child { margin-bottom: 0; }
-        .sum-icon { color: var(--accent); }
-
-        .verified-badge { background: rgba(107, 255, 202, 0.1); color: var(--accent3); padding: 0.4rem 0.8rem; border-radius: 100px; font-size: 0.8rem; display: inline-block; margin-bottom: 1.5rem; border: 1px solid rgba(107, 255, 202, 0.3); }
-
-        /* Confetti Canvas */
-        #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
-
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            width: 44px;
-            height: 44px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            outline: none;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        .back-btn:hover {
-            background: rgba(255,255,255,0.14);
-            border-color: rgba(255,255,255,0.25);
-            transform: translateX(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      .otp-box {
+        width: 48px;
+        height: 56px;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        background: var(--surface2);
+        color: var(--text);
+        font-size: 24px;
+        font-weight: 700;
+        font-family: "DM Mono", monospace;
+        text-align: center;
+        outline: none;
+        transition: all 0.2s ease;
+        caret-color: transparent;
+      }
+
+      .otp-box:focus {
+        border-color: var(--accent);
+        background: rgba(124, 107, 255, 0.08);
+        box-shadow: 0 0 0 3px rgba(124, 107, 255, 0.15);
+      }
+
+      .otp-box:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 400px) {
+        .otp-box {
+          width: 40px;
+          height: 48px;
+          font-size: 20px;
         }
+      }
+
+      /* Step 2 Strength Meter */
+      .strength-meter {
+        display: flex;
+        gap: 4px;
+        margin-top: 0.5rem;
+      }
+      .str-segment {
+        flex: 1;
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+
+      .checklist {
+        list-style: none;
+        margin-top: 1rem;
+        font-size: 0.8rem;
+      }
+      .checklist li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--muted);
+        margin-bottom: 0.3rem;
+      }
+      .checklist li.check {
+        color: var(--accent3);
+      }
+
+      /* Step 3 Success */
+      .success-anim {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 2rem;
+        display: block;
+      }
+      .summary-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      }
+      .sum-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+      }
+      .sum-item:last-child {
+        margin-bottom: 0;
+      }
+      .sum-icon {
+        color: var(--accent);
+      }
+
+      .verified-badge {
+        background: rgba(107, 255, 202, 0.1);
+        color: var(--accent3);
+        padding: 0.4rem 0.8rem;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(107, 255, 202, 0.3);
+      }
+
+      /* Confetti Canvas */
+      #confetti {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      .back-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateX(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
     </style>
-</head>
-<body>
 
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = "https://nvqtwsnwvidjfogevbsp.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52cXR3c253dmlkamZvZ2V2YnNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDk3NzIsImV4cCI6MjA5NDk4NTc3Mn0.UZ0gNZYrD3P31S1-VLNRgdvi4svELiZGZv1tZxCdUAk";
+
+      const { createClient } = supabase;
+      window._sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          autoRefreshToken: true,
+          persistSession: true,
+          detectSessionInUrl: true,
+        },
+      });
+      console.log("FlowZen + Supabase ✓");
+    </script>
+  </head>
+  <body>
     <!-- ===== FIX 3C: signup.html ADD back button HTML ===== -->
-    <button id="backBtn" class="back-btn" onclick="handleBack()" title="Go back" aria-label="Go back">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 9H3M3 9L8 4M3 9L8 14" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+    <button
+      id="backBtn"
+      class="back-btn"
+      onclick="handleBack()"
+      title="Go back"
+      aria-label="Go back"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M15 9H3M3 9L8 4M3 9L8 14"
+          stroke="#000000"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
 
     <div class="bg-glow">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="grid-overlay"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="grid-overlay"></div>
     </div>
 
     <canvas id="confetti"></canvas>
 
-    <div style="width: 100%; max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 10;">
-        <a href="landing.html" style="margin-top: 3rem; margin-bottom: 2rem; font-family: 'DM Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none;">FlowZen <span style="color: var(--accent);">✦</span></a>
-        
-        <!-- PROGRESS -->
-        <div class="progress-nav" style="width: 100%;">
-        <div class="prog-item active" id="prog-1">
-            <div class="prog-circle">1</div>
-            <div class="prog-label">Verify</div>
+    <div
+      style="
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      "
+    >
+      <div class="signup-header">
+        <!-- ROW 1: Logo -->
+        <div class="signup-logo-row">
+          <a href="landing.html" class="signup-logo">
+            Flow<span>Zen</span> ✦
+          </a>
         </div>
-        <div class="prog-line"></div>
-        <div class="prog-item" id="prog-2">
-            <div class="prog-circle">2</div>
-            <div class="prog-label">Account</div>
-        </div>
-        <div class="prog-line"></div>
-        <div class="prog-item" id="prog-3">
-            <div class="prog-circle">3</div>
-            <div class="prog-label">Done</div>
-        </div>
-    </div>
 
-    <!-- MAIN CARD -->
-    <div class="signup-card">
-        
+        <!-- ROW 2: Progress Steps -->
+        <div class="signup-steps-row">
+          <div class="step-item active" id="stepItem1">
+            <div class="step-circle">1</div>
+            <div class="step-label">VERIFY</div>
+          </div>
+          <div class="step-connector" id="connector1"></div>
+          <div class="step-item" id="stepItem2">
+            <div class="step-circle">2</div>
+            <div class="step-label">ACCOUNT</div>
+          </div>
+          <div class="step-connector" id="connector2"></div>
+          <div class="step-item" id="stepItem3">
+            <div class="step-circle">3</div>
+            <div class="step-label">DONE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CARD -->
+      <div class="signup-card">
         <!-- STEP 1: VERIFY EMAIL -->
         <div id="view-1" class="step-view active">
-            <div class="header">
-                <h1>Let's verify your email 📧</h1>
-                <p>Confirm your email before creating your account.</p>
+          <div class="header">
+            <h1>Let's verify your email 📧</h1>
+            <p>Confirm your email before creating your account.</p>
+          </div>
+
+          <div id="emailInputSection">
+            <div class="form-group">
+              <input
+                type="text"
+                id="fullName"
+                class="form-input"
+                placeholder="Your full name"
+                required
+              />
             </div>
 
             <div class="form-group">
-                <input type="text" id="fullName" class="form-input" placeholder="Your full name" required>
+              <input
+                type="email"
+                id="email"
+                class="form-input"
+                placeholder="you@example.com"
+                required
+              />
+              <div id="emailError" class="error-hint">
+                Please enter a valid email.
+              </div>
             </div>
 
-            <div class="form-group">
-                <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
-                <div id="emailError" class="error-hint">Please enter a valid email.</div>
-            </div>
+            <button id="sendCodeBtn" class="btn-full">
+              Send Verification Code &rarr;
+            </button>
+          </div>
 
-            <button id="sendCodeBtn" class="btn-full">Send Verification Code &rarr;</button>
-
-            <!-- OTP Section (Hidden initially) -->
-            <div id="otpSection" style="display: none; margin-top: 2.5rem; text-align: center;">
-                <div class="header" style="margin-bottom: 1.5rem;">
-                    <p style="color: var(--accent3);">📬 Code sent! (Use any 6 digits for demo)</p>
-                    <p style="font-size: 0.8rem;">Enter the 6-digit code</p>
-                </div>
-                <div class="otp-container">
-                    <input type="text" maxlength="1" class="otp-input">
-                    <input type="text" maxlength="1" class="otp-input">
-                    <input type="text" maxlength="1" class="otp-input">
-                    <input type="text" maxlength="1" class="otp-input">
-                    <input type="text" maxlength="1" class="otp-input">
-                    <input type="text" maxlength="1" class="otp-input">
-                </div>
-                <p style="font-size: 0.8rem; color: var(--muted);">Didn't receive? <a href="#" style="color: var(--accent);">Resend</a></p>
+          <!-- MAGIC LINK SECTION -->
+          <div id="magicLinkSent" style="display: none">
+            <div style="text-align: center; padding: 20px">
+              <div style="font-size: 64px; margin-bottom: 16px">📬</div>
+              <h3
+                style="
+                  font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;
+                  font-size: 22px;
+                  font-weight: 700;
+                  margin-bottom: 12px;
+                  color: var(--text);
+                "
+              >
+                Check your inbox!
+              </h3>
+              <p
+                style="
+                  color: var(--muted);
+                  font-size: 14px;
+                  line-height: 1.6;
+                  margin-bottom: 8px;
+                "
+              >
+                We sent a verification link to:
+              </p>
+              <p
+                style="
+                  color: var(--accent);
+                  font-family: &quot;DM Mono&quot;, monospace;
+                  font-size: 15px;
+                  font-weight: 600;
+                  margin-bottom: 24px;
+                "
+                id="magicLinkEmail"
+              ></p>
+              <p style="color: var(--muted); font-size: 13px; line-height: 1.7">
+                Click the
+                <strong style="color: var(--text)">"Verify My Email →"</strong>
+                button in that email.<br />
+                You'll be brought back here automatically to complete signup.
+              </p>
+              <div
+                style="
+                  margin-top: 24px;
+                  padding: 16px;
+                  background: rgba(124, 107, 255, 0.08);
+                  border: 1px solid rgba(124, 107, 255, 0.2);
+                  border-radius: 12px;
+                  font-size: 13px;
+                  color: var(--muted);
+                "
+              >
+                📁 Can't find it? Check your <strong>spam folder</strong
+                ><br /><br />
+                <span id="resendTimerMagic" style="color: var(--muted)">
+                  Resend available in 60s
+                </span>
+              </div>
             </div>
+          </div>
         </div>
 
         <!-- STEP 2: CREATE ACCOUNT -->
         <div id="view-2" class="step-view">
-            <div class="header">
-                <h1>Create your account ✦</h1>
-                <p>Choose username and password for future logins.</p>
+          <div class="header">
+            <h1>Create your account ✦</h1>
+            <p>Choose username and password for future logins.</p>
+          </div>
+
+          <div class="verified-badge" id="verifiedEmail">
+            ✓ email@example.com verified
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem">
+            <input
+              type="text"
+              id="username"
+              class="form-input"
+              placeholder="Choose a username"
+              required
+            />
+            <div id="userHint" class="error-hint" style="color: var(--accent3)">
+              ✓ Username available!
             </div>
+          </div>
 
-            <div class="verified-badge" id="verifiedEmail">✓ email@example.com verified</div>
-
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <input type="text" id="username" class="form-input" placeholder="Choose a username" required>
-                <div id="userHint" class="error-hint" style="color: var(--accent3);">✓ Username available!</div>
+          <div class="form-group" style="margin-bottom: 1rem">
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Create a strong password"
+              required
+            />
+            <div class="strength-meter">
+              <div class="str-segment" id="seg-1"></div>
+              <div class="str-segment" id="seg-2"></div>
+              <div class="str-segment" id="seg-3"></div>
+              <div class="str-segment" id="seg-4"></div>
             </div>
+            <ul class="checklist">
+              <li id="c-len">● At least 8 characters</li>
+              <li id="c-up">● One uppercase letter</li>
+              <li id="c-num">● One number</li>
+              <li id="c-spec">● One special character</li>
+            </ul>
+          </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
-                <div class="strength-meter">
-                    <div class="str-segment" id="seg-1"></div>
-                    <div class="str-segment" id="seg-2"></div>
-                    <div class="str-segment" id="seg-3"></div>
-                    <div class="str-segment" id="seg-4"></div>
-                </div>
-                <ul class="checklist">
-                    <li id="c-len">● At least 8 characters</li>
-                    <li id="c-up">● One uppercase letter</li>
-                    <li id="c-num">● One number</li>
-                    <li id="c-spec">● One special character</li>
-                </ul>
-            </div>
+          <div class="form-group">
+            <input
+              type="password"
+              id="confirmPassword"
+              class="form-input"
+              placeholder="Confirm your password"
+              required
+            />
+            <div id="matchError" class="error-hint">Passwords don't match.</div>
+          </div>
 
-            <div class="form-group">
-                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
-                <div id="matchError" class="error-hint">Passwords don't match.</div>
-            </div>
+          <div
+            style="
+              margin: 1.5rem 0;
+              font-size: 0.85rem;
+              display: flex;
+              gap: 0.5rem;
+              align-items: flex-start;
+            "
+          >
+            <input
+              type="checkbox"
+              id="terms"
+              style="margin-top: 0.2rem; accent-color: var(--accent)"
+              required
+            />
+            <label for="terms" style="color: var(--muted)"
+              >I agree to the
+              <a href="#" style="color: var(--accent)">Terms of Service</a> and
+              <a href="#" style="color: var(--accent)">Privacy Policy</a></label
+            >
+          </div>
 
-            <div style="margin: 1.5rem 0; font-size: 0.85rem; display: flex; gap: 0.5rem; align-items: flex-start;">
-                <input type="checkbox" id="terms" style="margin-top: 0.2rem; accent-color: var(--accent);" required>
-                <label for="terms" style="color: var(--muted);">I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and <a href="#" style="color: var(--accent);">Privacy Policy</a></label>
-            </div>
-
-            <button id="createBtn" class="btn-full" disabled>Create My Account &rarr;</button>
+          <button id="createBtn" class="btn-full" disabled>
+            Create My Account &rarr;
+          </button>
         </div>
 
         <!-- STEP 3: DONE -->
         <div id="view-3" class="step-view">
-            <div class="header">
-                <svg class="success-anim" viewBox="0 0 52 52">
-                    <circle cx="26" cy="26" r="25" fill="none" stroke="var(--accent3)" stroke-width="2">
-                        <animate attributeName="stroke-dasharray" from="0 157" to="157 157" dur="0.8s" fill="freeze" />
-                    </circle>
-                    <path fill="none" stroke="var(--accent3)" stroke-width="2" d="M14.1 27.2l7.1 7.2 16.7-16.8">
-                        <animate attributeName="stroke-dashoffset" from="40" to="0" dur="0.5s" begin="0.8s" fill="freeze" />
-                        <animate attributeName="stroke-dasharray" from="40" to="40" dur="0.1s" fill="freeze" />
-                    </path>
-                </svg>
-                <h1>You're all set! 🎉</h1>
-                <p>Your account is ready. Let's start learning.</p>
-            </div>
+          <div class="header">
+            <svg class="success-anim" viewBox="0 0 52 52">
+              <circle
+                cx="26"
+                cy="26"
+                r="25"
+                fill="none"
+                stroke="var(--accent3)"
+                stroke-width="2"
+              >
+                <animate
+                  attributeName="stroke-dasharray"
+                  from="0 157"
+                  to="157 157"
+                  dur="0.8s"
+                  fill="freeze"
+                />
+              </circle>
+              <path
+                fill="none"
+                stroke="var(--accent3)"
+                stroke-width="2"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="40"
+                  to="0"
+                  dur="0.5s"
+                  begin="0.8s"
+                  fill="freeze"
+                />
+                <animate
+                  attributeName="stroke-dasharray"
+                  from="40"
+                  to="40"
+                  dur="0.1s"
+                  fill="freeze"
+                />
+              </path>
+            </svg>
+            <h1>You're all set! 🎉</h1>
+            <p>Your account is ready. Let's start learning.</p>
+          </div>
 
-            <div class="summary-card">
-                <div class="sum-item">
-                    <span class="sum-icon">👤</span>
-                    <span id="sum-name">John Doe</span>
-                </div>
-                <div class="sum-item">
-                    <span class="sum-icon">✦</span>
-                    <span id="sum-user">@john</span>
-                </div>
-                <div class="sum-item">
-                    <span class="sum-icon">📧</span>
-                    <span id="sum-email">john@example.com</span>
-                </div>
-                <div class="sum-item" style="color: var(--muted); font-size: 0.8rem;">
-                    <span>🆓 Free Plan — Upgrade anytime</span>
-                </div>
+          <div class="summary-card">
+            <div class="sum-item">
+              <span class="sum-icon">👤</span>
+              <span id="sum-name">John Doe</span>
             </div>
+            <div class="sum-item">
+              <span class="sum-icon">✦</span>
+              <span id="sum-user">@john</span>
+            </div>
+            <div class="sum-item">
+              <span class="sum-icon">📧</span>
+              <span id="sum-email">john@example.com</span>
+            </div>
+            <div
+              class="sum-item"
+              style="color: var(--muted); font-size: 0.8rem"
+            >
+              <span>🆓 Free Plan — Upgrade anytime</span>
+            </div>
+          </div>
 
-            <button id="finalBtn" class="btn-full" style="background: linear-gradient(135deg, var(--accent), var(--accent2));">Start Learning Now 🚀</button>
-            
-            <p id="redirectTimer" style="text-align: center; font-size: 0.85rem; color: var(--muted); margin-top: 1.5rem;">Redirecting in 5...</p>
+          <button
+            id="finalBtn"
+            class="btn-full"
+            style="
+              background: linear-gradient(
+                135deg,
+                var(--accent),
+                var(--accent2)
+              );
+            "
+          >
+            Start Learning Now 🚀
+          </button>
+
+          <p
+            id="redirectTimer"
+            style="
+              text-align: center;
+              font-size: 0.85rem;
+              color: var(--muted);
+              margin-top: 1.5rem;
+            "
+          >
+            Redirecting in 5...
+          </p>
         </div>
-
+      </div>
     </div>
-    </div> <!-- End of centered container -->
+    <!-- End of centered container -->
 
     <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('loaded');
+      console.log("FlowZen signup loaded");
+      console.log(
+        "Supabase URL:",
+        typeof SUPABASE_URL !== "undefined" && SUPABASE_URL
+          ? SUPABASE_URL.substring(0, 30) + "..."
+          : "NOT SET",
+      );
+      console.log(
+        "Supabase Key:",
+        typeof SUPABASE_ANON_KEY !== "undefined" && SUPABASE_ANON_KEY
+          ? "SET (length: " + SUPABASE_ANON_KEY.length + ")"
+          : "NOT SET",
+      );
+      console.log(
+        "Supabase client:",
+        typeof _sb !== "undefined" && _sb ? "✓ Connected" : "✗ Not connected",
+      );
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("loaded");
+      });
+
+      // Toast utility if not present, simplest implementation
+
+      function toast(msg, type = "info") {
+        let container = document.getElementById("toast-container");
+        if (!container) {
+          container = document.createElement("div");
+          container.id = "toast-container";
+          container.style.position = "fixed";
+          container.style.bottom = "20px";
+          container.style.right = "20px";
+          container.style.zIndex = "9999";
+          container.style.display = "flex";
+          container.style.flexDirection = "column";
+          container.style.gap = "10px";
+          document.body.appendChild(container);
+        }
+
+        const toastEl = document.createElement("div");
+        toastEl.textContent = msg;
+        toastEl.style.padding = "12px 20px";
+        toastEl.style.borderRadius = "8px";
+        toastEl.style.color = "#fff";
+        toastEl.style.fontFamily = "monospace";
+        toastEl.style.fontSize = "14px";
+        toastEl.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+        toastEl.style.opacity = "0";
+        toastEl.style.transform = "translateY(20px)";
+        toastEl.style.transition = "all 0.3s ease";
+
+        if (type === "error") {
+          toastEl.style.background = "#ff4b4b";
+        } else if (type === "success") {
+          toastEl.style.background = "#00c853";
+        } else {
+          toastEl.style.background = "#333";
+        }
+
+        container.appendChild(toastEl);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            toastEl.style.opacity = "1";
+            toastEl.style.transform = "translateY(0)";
+          });
         });
 
-        const views = [
-            document.getElementById('view-1'),
-            document.getElementById('view-2'),
-            document.getElementById('view-3')
-        ];
-        const progItems = [
-            document.getElementById('prog-1'),
-            document.getElementById('prog-2'),
-            document.getElementById('prog-3')
-        ];
+        setTimeout(() => {
+          toastEl.style.opacity = "0";
+          toastEl.style.transform = "translateX(20px)";
+          setTimeout(() => {
+            if (toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
+          }, 300);
+        }, 4000);
+      }
 
-        let currentStep = 1;
-        let userData = {
-            fullName: "",
-            email: "",
-            username: "",
-            password: ""
+      let signupEmail = "";
+      let signupFullName = "";
+      let currentStep = 1;
+
+      const fullNameInput = document.getElementById("fullName");
+      const emailInput = document.getElementById("email");
+      const sendCodeBtn = document.getElementById("sendCodeBtn");
+      const otpInputs = document.querySelectorAll(".otp-input");
+
+      emailInput.addEventListener("input", () => {
+        const isValid = /^[^s@]+@[^s@]+\.[^s@]+$/.test(emailInput.value);
+        emailInput.classList.toggle("valid", isValid);
+        emailInput.classList.toggle(
+          "invalid",
+          !isValid && emailInput.value.length > 0,
+        );
+        document.getElementById("emailError").style.display =
+          !isValid && emailInput.value.length > 0 ? "block" : "none";
+      });
+
+      sendCodeBtn.addEventListener("click", sendVerificationEmail);
+
+      otpInputs.forEach((input, idx) => {
+        input.addEventListener("input", () => handleOTPInput(input, idx));
+        input.addEventListener("keydown", (e) =>
+          handleOTPBackspace(input, idx, e),
+        );
+      });
+
+      const userInput = document.getElementById("username");
+      const passInput = document.getElementById("password");
+      const confirmPassInput = document.getElementById("confirmPassword");
+      const termsCheck = document.getElementById("terms");
+      const createBtn = document.getElementById("createBtn");
+      const userHint = document.getElementById("userHint");
+      const matchError = document.getElementById("matchError");
+
+      userInput.addEventListener("input", () => {
+        const val = userInput.value;
+        const validChars = /^[a-zA-Z0-9_]+$/.test(val);
+        const validLen = val.length >= 3 && val.length <= 20;
+
+        if (!validLen || !validChars) {
+          userHint.style.display = "block";
+          userHint.style.color = "var(--accent2)";
+          userHint.textContent = !validLen
+            ? "Min 3 characters"
+            : "Letters, numbers, _ only";
+          userInput.classList.add("invalid");
+          userInput.classList.remove("valid");
+        } else {
+          userHint.style.display = "block";
+          userHint.style.color = "var(--muted)";
+          userHint.textContent = "✓ Username available!"; // Simplified
+          userHint.style.color = "var(--accent3)";
+          userInput.classList.add("valid");
+          userInput.classList.remove("invalid");
+          validateStep2();
+        }
+      });
+
+      passInput.addEventListener("input", () => {
+        const val = passInput.value;
+        const checks = {
+          len: val.length >= 8,
+          up: /[A-Z]/.test(val),
+          num: /[0-9]/.test(val),
+          spec: /[^A-Za-z0-9]/.test(val),
         };
 
-        // ===== FIX 3C: signup.html ADD back button JS =====
-        function handleBack() {
-            if (currentStep === 1) {
-                window.location.href = "landing.html";
-            } else if (currentStep === 2) {
-                goToStep(1);
-            } else if (currentStep === 3) {
-                // hidden on step 3, do nothing
+        // Detect magic link return
+        async function handleMagicLinkReturn() {
+          try {
+            const hashParams = new URLSearchParams(
+              window.location.hash.substring(1),
+            );
+            const accessToken = hashParams.get("access_token");
+            const type = hashParams.get("type");
+
+            if (accessToken && type === "magiclink") {
+              console.log("Magic link detected!");
+
+              document.body.innerHTML = `
+              <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #09090f; font-family: 'Plus Jakarta Sans', sans-serif;">
+                <div style="font-size:48px; margin-bottom:20px;">✨</div>
+                <h2 style="color:#e8e8f0; margin-bottom:8px;">Email Verified!</h2>
+                <p style="color:#6b6b80; font-size:14px;">Setting up your account...</p>
+              </div>`;
+
+              const {
+                data: { session },
+                error,
+              } = await _sb.auth.getSession();
+
+              if (error || !session) {
+                window.location.replace("signup.html");
+                return;
+              }
+
+              const { data: profile } = await _sb
+                .from("profiles")
+                .select("username")
+                .eq("id", session.user.id)
+                .single();
+
+              if (profile && profile.username) {
+                localStorage.setItem("fz_current_user", profile.username);
+                localStorage.setItem("fz_is_admin", "false");
+                window.location.replace("index.html");
+              } else {
+                const email = session.user.email;
+                const fullName = session.user.user_metadata?.full_name || "";
+
+                sessionStorage.setItem("fz_signup_email", email);
+                sessionStorage.setItem("fz_signup_name", fullName);
+                sessionStorage.setItem("fz_verified", "true");
+
+                window.location.replace("signup.html?step=2");
+              }
+              return;
             }
-        }
 
-        // --- STEP 1 LOGIC ---
-        const fullNameInput = document.getElementById('fullName');
-        const emailInput = document.getElementById('email');
-        const sendCodeBtn = document.getElementById('sendCodeBtn');
-        const otpSection = document.getElementById('otpSection');
-        const otpInputs = document.querySelectorAll('.otp-input');
-
-        emailInput.addEventListener('input', () => {
-            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value);
-            emailInput.classList.toggle('valid', isValid);
-            emailInput.classList.toggle('invalid', !isValid && emailInput.value.length > 0);
-            document.getElementById('emailError').style.display = (!isValid && emailInput.value.length > 0) ? 'block' : 'none';
-        });
-
-        sendCodeBtn.addEventListener('click', () => {
-            if (fullNameInput.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
-                sendCodeBtn.disabled = true;
-                sendCodeBtn.textContent = "Sending code...";
-                
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("step") === "2") {
+              const verified = sessionStorage.getItem("fz_verified");
+              if (verified === "true") {
                 setTimeout(() => {
-                    userData.fullName = fullNameInput.value.trim();
-                    userData.email = emailInput.value.trim();
-                    sendCodeBtn.style.display = 'none';
-                    otpSection.style.display = 'block';
-                    otpInputs[0].focus();
-                }, 1500);
-            }
-        });
-
-        otpInputs.forEach((input, idx) => {
-            input.addEventListener('input', (e) => {
-                if (e.target.value.length === 1 && idx < 5) otpInputs[idx + 1].focus();
-                
-                // Submit if last
-                if (Array.from(otpInputs).every(inp => inp.value.length === 1)) {
-                    // All filled
-                    setTimeout(() => goToStep(2), 500);
-                }
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && !e.target.value && idx > 0) otpInputs[idx - 1].focus();
-            });
-        });
-
-        // --- STEP 2 LOGIC ---
-        const userInput = document.getElementById('username');
-        const passInput = document.getElementById('password');
-        const confirmPassInput = document.getElementById('confirmPassword');
-        const termsCheck = document.getElementById('terms');
-        const createBtn = document.getElementById('createBtn');
-        const userHint = document.getElementById('userHint');
-        const matchError = document.getElementById('matchError');
-
-        userInput.addEventListener('input', () => {
-            const val = userInput.value;
-            const validChars = /^[a-zA-Z0-9_]+$/.test(val);
-            const validLen = val.length >= 3 && val.length <= 20;
-            
-            if (!validLen || !validChars) {
-                userHint.style.display = 'block';
-                userHint.style.color = 'var(--accent2)';
-                userHint.textContent = !validLen ? "Min 3 characters" : "Letters, numbers, _ only";
-                userInput.classList.add('invalid');
-                userInput.classList.remove('valid');
-            } else {
-                userHint.style.display = 'block';
-                userHint.style.color = 'var(--muted)';
-                userHint.textContent = "Checking...";
-                setTimeout(() => {
-                    userHint.textContent = "✓ Username available!";
-                    userHint.style.color = 'var(--accent3)';
-                    userInput.classList.add('valid');
-                    userInput.classList.remove('invalid');
-                    validateStep2();
+                  goToStep(2);
+                  toast(
+                    "Email verified! ✓ Now create your username.",
+                    "success",
+                  );
                 }, 500);
+              }
             }
-        });
-
-        passInput.addEventListener('input', () => {
-            const val = passInput.value;
-            const checks = {
-                len: val.length >= 8,
-                up: /[A-Z]/.test(val),
-                num: /[0-9]/.test(val),
-                spec: /[^A-Za-z0-9]/.test(val)
-            };
-
-            Object.keys(checks).forEach(k => {
-                document.getElementById('c-' + k).classList.toggle('check', checks[k]);
-            });
-
-            const score = Object.values(checks).filter(Boolean).length;
-            for(let i=1; i<=4; i++) {
-                const seg = document.getElementById('seg-' + i);
-                seg.style.background = 'var(--border)';
-                if (i <= score) {
-                    if (score === 1) seg.style.background = 'var(--accent2)';
-                    else if (score === 2) seg.style.background = 'var(--warn)';
-                    else if (score === 3) seg.style.background = 'yellow';
-                    else seg.style.background = 'var(--accent3)';
-                }
-            }
-            validateStep2();
-        });
-
-        confirmPassInput.addEventListener('input', () => {
-            const match = confirmPassInput.value === passInput.value;
-            matchError.style.display = (match || confirmPassInput.value === "") ? 'none' : 'block';
-            confirmPassInput.classList.toggle('valid', match && confirmPassInput.value !== "");
-            validateStep2();
-        });
-
-        termsCheck.addEventListener('change', validateStep2);
-
-        function validateStep2() {
-            const isUserValid = userInput.classList.contains('valid');
-            const isPassStrong = passInput.value.length >= 8 && /[A-Z]/.test(passInput.value);
-            const isMatch = confirmPassInput.value === passInput.value && passInput.value !== "";
-            const isTerms = termsCheck.checked;
-
-            createBtn.disabled = !(isUserValid && isPassStrong && isMatch && isTerms);
+          } catch (err) {
+            console.error("Magic link handling error:", err);
+          }
         }
 
-        createBtn.addEventListener('click', () => {
-            createBtn.disabled = true;
-            createBtn.textContent = "Creating account...";
-            
-            setTimeout(() => {
-                completeSignup(userInput.value, passInput.value, userData.email, userData.fullName);
-            }, 1000);
+        document.addEventListener("DOMContentLoaded", function () {
+          handleMagicLinkReturn();
         });
 
-        function completeSignup(username, password, email, fullName) {
-          
-          // Save user to lf_users
-          const users = JSON.parse(
-            localStorage.getItem("lf_users") || "{}");
-          
-          users[username] = {
-            password: btoa(password),
+        Object.keys(checks).forEach((k) => {
+          document
+            .getElementById("c-" + k)
+            .classList.toggle("check", checks[k]);
+        });
+
+        const score = Object.values(checks).filter(Boolean).length;
+        for (let i = 1; i <= 4; i++) {
+          const seg = document.getElementById("seg-" + i);
+          seg.style.background = "var(--border)";
+          if (i <= score) {
+            if (score === 1) seg.style.background = "var(--accent2)";
+            else if (score === 2) seg.style.background = "var(--warn)";
+            else if (score === 3) seg.style.background = "yellow";
+            else seg.style.background = "var(--accent3)";
+          }
+        }
+        validateStep2();
+      });
+
+      confirmPassInput.addEventListener("input", () => {
+        const match = confirmPassInput.value === passInput.value;
+        matchError.style.display =
+          match || confirmPassInput.value === "" ? "none" : "block";
+        confirmPassInput.classList.toggle(
+          "valid",
+          match && confirmPassInput.value !== "",
+        );
+        validateStep2();
+      });
+
+      termsCheck.addEventListener("change", validateStep2);
+
+      function validateStep2() {
+        const isUserValid = userInput.classList.contains("valid");
+        const isPassStrong =
+          passInput.value.length >= 8 && /[A-Z]/.test(passInput.value);
+        const isMatch =
+          confirmPassInput.value === passInput.value && passInput.value !== "";
+        const isTerms = termsCheck.checked;
+
+        createBtn.disabled = !(
+          isUserValid &&
+          isPassStrong &&
+          isMatch &&
+          isTerms
+        );
+      }
+
+      createBtn.addEventListener("click", completeSignup);
+
+      // Helper: reset send button
+      function resetSendButton() {
+        const btn = document.getElementById("sendCodeBtn");
+        if (btn) {
+          btn.textContent = "Send Verification Code →";
+          btn.disabled = false;
+        }
+      }
+
+      // Helper: show OTP boxes after success
+      function showOTPInput(email) {
+        // Hide send button
+        const sendBtn = document.getElementById("sendCodeBtn");
+        if (sendBtn) sendBtn.style.display = "none";
+
+        // Show OTP section
+        const otpSection = document.getElementById("otpSection");
+        if (otpSection) {
+          otpSection.style.display = "block";
+          otpSection.style.animation = "fadeIn 0.3s ease";
+        }
+
+        // Show the email it was sent to
+        const emailDisplay = document.getElementById("sentToEmail");
+        if (emailDisplay) {
+          emailDisplay.textContent = email;
+        }
+
+        // Focus first OTP box
+        setTimeout(() => {
+          const firstBox = document.querySelector(".otp-box");
+          if (firstBox) firstBox.focus();
+        }, 100);
+
+        startResendTimer();
+      }
+
+      function startResendTimer() {
+        let seconds = 60;
+        const el = document.getElementById("resendTimer");
+
+        const timer = setInterval(() => {
+          seconds--;
+          if (el) {
+            el.textContent =
+              seconds > 0 ? "Resend in " + seconds + "s" : "Resend code";
+          }
+
+          if (seconds <= 0) {
+            clearInterval(timer);
+            if (el) {
+              el.style.color = "var(--accent)";
+              el.style.cursor = "pointer";
+              el.onclick = () => {
+                sendVerificationEmail();
+                startResendTimer();
+              };
+            }
+          }
+        }, 1000);
+      }
+
+      async function sendVerificationEmail() {
+        if (
+          !SUPABASE_URL ||
+          SUPABASE_URL.toUpperCase().includes("REPLACE") ||
+          !SUPABASE_ANON_KEY ||
+          SUPABASE_ANON_KEY.toUpperCase().includes("REPLACE")
+        ) {
+          toast(
+            "⚠️ Supabase not configured. Please add your API keys.",
+            "error",
+          );
+          resetSendButton();
+          return;
+        }
+
+        if (typeof _sb === "undefined" || !_sb || !_sb.auth) {
+          toast("⚠️ Supabase client not initialized.", "error");
+          resetSendButton();
+          return;
+        }
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const emailInputEl = document.getElementById("email");
+        const email = emailInputEl ? emailInputEl.value.trim() : "";
+
+        if (!fullName) {
+          toast("Please enter your name", "error");
+          resetSendButton();
+          return;
+        }
+
+        const emailRegex =
+          /^[abc]?\w*[\.\-]?\w+@[a-zA-Z0-9\-]+(\.[a-zA-Z]{2,})+$/;
+        if (!email) {
+          toast("Please enter a valid email", "error");
+          resetSendButton();
+          return;
+        }
+
+        signupEmail = email;
+        signupFullName = fullName;
+        sessionStorage.setItem("fz_signup_email", email);
+        sessionStorage.setItem("fz_signup_name", fullName);
+
+        const btn = document.getElementById("sendCodeBtn");
+        if (btn) {
+          btn.textContent = "Sending...";
+          btn.disabled = true;
+        }
+
+        const safetyTimer = setTimeout(() => {
+          toast(
+            "⏱ Request timed out. Check your Supabase keys and try again.",
+            "error",
+          );
+          resetSendButton();
+        }, 15000);
+
+        try {
+          console.log("Sending magic link to:", email);
+
+          const { data, error } = await _sb.auth.signInWithOtp({
             email: email,
-            fullName: fullName,
+            options: {
+              shouldCreateUser: true,
+              data: { full_name: fullName },
+            },
+          });
+
+          clearTimeout(safetyTimer);
+          if (error) {
+            if (error.message.includes("rate limit"))
+              throw new Error(
+                "Too many attempts. Wait 60 seconds and try again.",
+              );
+            if (error.message.includes("invalid"))
+              throw new Error(
+                "Invalid email address. Please check and try again.",
+              );
+            throw error;
+          }
+
+          if (btn) btn.style.display = "none";
+          const inputFields = document.getElementById("emailInputSection");
+          if (inputFields) inputFields.style.display = "none";
+
+          const magicMsg = document.getElementById("magicLinkSent");
+          if (magicMsg) {
+            magicMsg.style.display = "block";
+            magicMsg.style.animation = "fadeIn 0.4s ease";
+          }
+
+          const emailDisplay = document.getElementById("magicLinkEmail");
+          if (emailDisplay) emailDisplay.textContent = email;
+
+          startResendCountdown();
+          toast("📬 Verification email sent! Check your inbox.", "success");
+        } catch (err) {
+          clearTimeout(safetyTimer);
+          console.error("Auth error:", err);
+          toast("Error: " + err.message, "error");
+          resetSendButton();
+        }
+      }
+
+      function startResendCountdown() {
+        let secs = 60;
+        const el = document.getElementById("resendTimerMagic");
+        if (!el) return;
+        const timer = setInterval(() => {
+          secs--;
+          if (el) {
+            if (secs > 0) {
+              el.textContent = "Resend available in " + secs + "s";
+              el.style.cursor = "default";
+            } else {
+              clearInterval(timer);
+              el.textContent = "🔄 Click to resend email";
+              el.style.color = "var(--accent)";
+              el.style.cursor = "pointer";
+              el.style.fontWeight = "600";
+              el.onclick = () => {
+                window.location.reload();
+              };
+            }
+          }
+        }, 1000);
+      }
+
+      function startResendCountdown() {
+        let secs = 60;
+        const el = document.getElementById("resendTimerMagic");
+        const timer = setInterval(() => {
+          secs--;
+          if (el) {
+            if (secs > 0) {
+              el.textContent = "Resend available in " + secs + "s";
+              el.style.cursor = "default";
+            } else {
+              clearInterval(timer);
+              el.textContent = "🔄 Click to resend email";
+              el.style.color = "var(--accent)";
+              el.style.cursor = "pointer";
+              el.style.fontWeight = "600";
+              el.onclick = () => {
+                window.location.reload();
+              };
+            }
+          }
+        }, 1000);
+      }
+
+      async function completeSignup() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPass = document.getElementById("confirmPassword").value;
+
+        if (!username || username.length < 3) {
+          toast("Username needs 3+ chars", "error");
+          return;
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          toast("Letters, numbers, _ only", "error");
+          return;
+        }
+        if (password.length < 8) {
+          toast("Password needs 8+ chars", "error");
+          return;
+        }
+        if (password !== confirmPass) {
+          toast("Passwords don't match", "error");
+          return;
+        }
+
+        const termsEl = document.getElementById("terms");
+        const termsChecked = termsEl ? termsEl.checked : true;
+        if (!termsChecked) {
+          toast("Please accept the terms", "error");
+          return;
+        }
+
+        const btn = document.getElementById("createBtn");
+        if (btn) {
+          btn.textContent = "Creating...";
+          btn.disabled = true;
+        }
+
+        try {
+          const {
+            data: { session },
+          } = await _sb.auth.getSession();
+
+          if (!session) {
+            toast("Session expired. Please start over.", "error");
+            setTimeout(() => {
+              window.location.replace("signup.html");
+            }, 2000);
+            return;
+          }
+
+          const { error: updateError } = await _sb.auth.updateUser({
+            password: password,
+            data: {
+              username: username,
+              full_name: sessionStorage.getItem("fz_signup_name") || username,
+            },
+          });
+
+          if (updateError) throw updateError;
+
+          const { error: profileError } = await _sb.from("profiles").upsert({
+            id: session.user.id,
+            username: username,
+            full_name: sessionStorage.getItem("fz_signup_name") || username,
             plan: "free",
-            createdAt: new Date().toISOString()
-          };
-          
-          localStorage.setItem(
-            "lf_users", JSON.stringify(users));
-          
-          // Set current session
-          localStorage.setItem(
-            "lf_current_user", username);
-          localStorage.setItem(
-            "lf_is_admin", "false");
-          
-          // Go to app — use replace to prevent 
-          // back button returning to signup
-          window.location.replace("index.html");
+            is_admin: false,
+          });
+
+          if (profileError && profileError.code !== "23505") throw profileError;
+
+          localStorage.setItem("fz_current_user", username);
+          localStorage.setItem("fz_is_admin", "false");
+          localStorage.setItem("fz_email_" + username, session.user.email);
+
+          goToStep(3);
+
+          let count = 4;
+          const timer = setInterval(() => {
+            count--;
+            const el = document.getElementById("redirectTimer");
+            if (el) el.textContent = "Redirecting in " + count + "...";
+            if (count <= 0) {
+              clearInterval(timer);
+              window.location.replace("index.html");
+            }
+          }, 1000);
+        } catch (err) {
+          toast("Error: " + err.message, "error");
+          if (btn) {
+            btn.textContent = "Create My Account &rarr;";
+            btn.disabled = false;
+          }
+        }
+      }
+
+      function goToStep(step) {
+        currentStep = step;
+
+        // Update step items
+        document.querySelectorAll(".step-item").forEach((el, i) => {
+          el.classList.remove("active", "done");
+          if (i + 1 === step) {
+            el.classList.add("active");
+          } else if (i + 1 < step) {
+            el.classList.add("done");
+          }
+        });
+
+        // Update connectors
+        const connectors = document.querySelectorAll(".step-connector");
+        connectors.forEach((el, i) => {
+          el.classList.toggle("active", i + 1 < step);
+        });
+
+        // Show/hide step content
+        const views = [
+          document.getElementById("view-1"),
+          document.getElementById("view-2"),
+          document.getElementById("view-3"),
+        ];
+        views.forEach((v, i) => {
+          // Need to guard because sometimes views might be null if HTML structure differs, but we know it's view-1, view-2, view-3
+          if (v) v.classList.toggle("active", i === step - 1);
+        });
+
+        if (step === 2) {
+          document.getElementById("verifiedEmail").textContent =
+            `✓ ${sessionStorage.getItem("fz_signup_email")} verified`;
+        }
+        if (step === 3) {
+          document.getElementById("sum-name").textContent =
+            sessionStorage.getItem("fz_signup_name");
+          document.getElementById("sum-user").textContent =
+            "@" + document.getElementById("username").value;
+          document.getElementById("sum-email").textContent =
+            sessionStorage.getItem("fz_signup_email");
         }
 
-        // --- STEP 3 LOGIC ---
-        function goToStep(step) {
-            currentStep = step;
-            views.forEach((v, i) => v.classList.toggle('active', i === step - 1));
-            progItems.forEach((p, i) => {
-                p.classList.toggle('active', i === step - 1);
-                p.classList.toggle('complete', i < step - 1);
+        // Back button
+        const backBtn = document.getElementById("backBtn");
+        if (backBtn) {
+          backBtn.style.display = step === 3 ? "none" : "flex";
+        }
+
+        // Confetti on step 3
+        if (step === 3 && typeof confetti === "function") {
+          setTimeout(() => {
+            confetti({
+              particleCount: 150,
+              spread: 80,
+              origin: { y: 0.5 },
             });
-
-            if (step === 2) {
-                document.getElementById('verifiedEmail').textContent = `✓ ${userData.email} verified`;
-            }
-
-            if (step === 3) {
-                document.getElementById('sum-name').textContent = userData.fullName;
-                document.getElementById('sum-user').textContent = "@" + userData.username;
-                document.getElementById('sum-email').textContent = userData.email;
-                fireConfetti();
-                startRedirectTimer();
-            }
-
-            const backBtn = document.getElementById("backBtn");
-            if (backBtn) {
-                backBtn.style.display = step === 3 ? "none" : "flex";
-            }
+          }, 300);
         }
+      }
 
-        function fireConfetti() {
-            if (typeof confetti !== 'function') return;
-            const count = 200;
-            const defaults = { origin: { y: 0.7 } };
-
-            function fire(particleRatio, opts) {
-                confetti({
-                    ...defaults,
-                    ...opts,
-                    particleCount: Math.floor(count * particleRatio)
-                });
-            }
-
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+      function handleBack() {
+        if (currentStep === 1) {
+          window.location.href = "landing.html";
+        } else if (currentStep === 2) {
+          goToStep(1);
         }
-
-        function startRedirectTimer() {
-            let count = 5;
-            const timer = document.getElementById('redirectTimer');
-            const interval = setInterval(() => {
-                count--;
-                timer.textContent = `Redirecting in ${count}...`;
-                if (count <= 0) {
-                    clearInterval(interval);
-                    window.location.href = 'index.html';
-                }
-            }, 1000);
-
-            document.getElementById('finalBtn').onclick = () => window.location.href = 'index.html';
-        }
+      }
     </script>
-</body>
+  </body>
 </html>

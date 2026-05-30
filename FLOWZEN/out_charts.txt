@@ -1,0 +1,31 @@
+852:        /* --- SECTION 3: AI INSIGHTS & CHARTS --- */
+952:        .charts-grid { display: flex; flex-direction: column; gap: 2rem; margin-top: 1rem; }
+953:        .chart-row-1 { width: 100%; }
+954:        .chart-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+955:        .chart-container-inner { position: relative; width: 100%; height: 300px; padding-top: 1rem; }
+956:        .chart-overlay {
+2919:                        <p class="modal-text">Log study sessions, see your progress with beautiful charts, and never lose track of what you've learned.</p>
+3058:                <!-- Charts Section -->
+3060:                <div class="charts-grid">
+3061:                    <div class="glass-card chart-row-1 relative">
+3066:                            <div class="chart-container-inner">
+3067:                                <canvas id="chart-line"></canvas>
+3072:                    <div class="chart-row-2">
+3073:                        <div class="glass-card relative" id="chart-doughnut-card">
+3078:                                <div class="chart-container-inner" style="height: 250px;">
+3079:                                    <canvas id="chart-doughnut"></canvas>
+3082:                            <div id="chart-lock-1" class="chart-overlay hidden">
+3085:                                <p style="font-size: 0.9rem; color: var(--c-text-muted); margin-bottom: 1rem;">Upgrade to Pro to unlock all charts</p>
+3086:                                <button class="btn-upgrade" onclick="showUpgradeModal('Pie Chart')">Upgrade to Pro</button>
+3090:                        <div class="glass-card relative" id="chart-bar-card">
+3095:                                <div class="chart-container-inner" style="height: 250px;">
+3096:                                    <canvas id="chart-bar"></canvas>
+3099:                            <div id="chart-lock-2" class="chart-overlay hidden">
+3102:                                <p style="font-size: 0.9rem; color: var(--c-text-muted); margin-bottom: 1rem;">Upgrade to Pro to unlock all charts</p>
+3103:                                <button class="btn-upgrade" onclick="showUpgradeModal('Bar Chart')">Upgrade to Pro</button>
+3398:                                    <span class="quick-action-label">View Charts</span>
+3659:                            <div class="chart-title" style="color: var(--c-pink);">
+3662:                            <div class="chart-sub" style="margin-bottom: 20px;">
+3725:                            <li><span style="color:var(--c-green);">✦</span> All charts unlocked</li>
+3774:            try { updateCharts(); } 
+3775:            catch(e) { console.log("charts:", e); }

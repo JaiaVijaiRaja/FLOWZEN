@@ -24,7 +24,7 @@ setTimeout(() => {
 
 function getSessionsKey() {
     const userData = window.currentUserData || (typeof currentUserData !== 'undefined' ? currentUserData : null);
-    return `lf_sessions_${userData?.name || ''}`;
+    return `fz_sessions_${userData?.name || ''}`;
 }
 
 function getSessions() {

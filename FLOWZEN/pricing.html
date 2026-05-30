@@ -471,6 +471,27 @@
             .hero-actions .btn { width: 100%; }
         }
     </style>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://nvqtwsnwvidjfogevbsp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52cXR3c253dmlkamZvZ2V2YnNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDk3NzIsImV4cCI6MjA5NDk4NTc3Mn0.UZ0gNZYrD3P31S1-VLNRgdvi4svELiZGZv1tZxCdUAk';
+
+        const { createClient } = supabase;
+        window._sb = createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+        console.log('FlowZen + Supabase ✓');
+    </script>
 </head>
 <body>
     
